@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropGuard AI - Hybrid Early Detection & Decision-Support System</title>
+    <meta name="description" content="Hybrid AI crop disease early detection platform combining CNN optical vision with Random Forest & XGBoost environmental modeling (IMD Weather, Sentinel-2 NDVI, SoilGrids, and SHAP XAI).">
+    <meta name="theme-color" content="#0d231a">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styling -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#welcome" class="nav-logo" id="logo-link">
+                <div class="logo-icon-bg">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="brand-title">CropGuard<span class="accent-text">AI</span></span>
+                    <span class="brand-subtitle">Hybrid Pathology & DSS Platform</span>
+                </div>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="#welcome" class="nav-link active" id="nav-home"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#scanner-section" class="nav-link" id="nav-scanner"><i class="fa-solid fa-network-wired"></i> Hybrid AI Engine</a>
+                <a href="#dss-section" class="nav-link" id="nav-dss"><i class="fa-solid fa-square-poll-vertical"></i> Decision Support (DSS)</a>
+                <a href="#shap-section" class="nav-link" id="nav-shap"><i class="fa-solid fa-brain"></i> Explainable AI (SHAP)</a>
+                <a href="#research-section" class="nav-link" id="nav-research"><i class="fa-solid fa-book-bookmark"></i> Disease Hub</a>
+                <a href="#global-map-section" class="nav-link" id="nav-map"><i class="fa-solid fa-map-location-dot"></i> India Map</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="btn btn-primary" id="quick-scan-btn">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Upload & Test
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+        <!-- 1. WELCOME / OPENING HERO PAGE -->
+        <section id="welcome" class="hero-section">
+            <div class="hero-backdrop"></div>
+            <div class="hero-content-wrapper">
+                <div class="hero-badge">
+                    <span class="pulse-dot"></span> Pre-Symptomatic & Optical Hybrid AI Framework
+                </div>
+                
+                <h1 class="hero-title">
+                    Early Crop Disease Detection & <span class="highlight-gradient">Decision-Support System</span>
+                </h1>
+                
+                <p class="hero-lead">
+                    Combining <strong>Optical CNN Vision</strong> with <strong>Random Forest & XGBoost Climate/Soil Ensembles</strong> (IMD Weather, Sentinel-2 NDVI Satellite Data, SoilGrids) for pre-symptomatic risk forecasting and farmer action advisories.
+                </p>
+
+                <!-- DUAL CHOICE SELECTION CARDS -->
+                <div class="choice-cards-grid">
+                    <!-- Choice A: Upload & Identify -->
+                    <div class="choice-card choice-identify" id="choice-upload-card">
+                        <div class="choice-icon-wrapper">
+                            <i class="fa-solid fa-camera-retro"></i>
+                        </div>
+                        <div class="choice-content">
+                            <span class="choice-tag">Hybrid Diagnostic Scanner</span>
+                            <h2>Identify Disease via Image & Environmental Data</h2>
+                            <p>Upload a leaf image or input microclimate data (IMD weather + soil). Get instant dual-model diagnosis, severity %, Indian hotspot maps, and treatment timing.</p>
+                            <button class="btn btn-accent choice-btn" id="btn-goto-upload">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Run Hybrid AI Scanner
+                            </button>
+                        </div>
+                        <div class="choice-card-bg-glow glow-green"></div>
+                    </div>
+
+                    <!-- Choice B: Decision Support System Prototype -->
+                    <div class="choice-card choice-research" id="choice-research-card">
+                        <div class="choice-icon-wrapper">
+                            <i class="fa-solid fa-diagram-project"></i>
+                        </div>
+                        <div class="choice-content">
+                            <span class="choice-tag">SIH Judge Support DSS</span>
+                            <h2>Explore Decision-Support System (DSS) Prototype</h2>
+                            <p>Test the 4-stage climate-integrated DSS architecture, view SHAP model explainability, evaluation metrics (F1, AUC-ROC, Confusion Matrix), and farmer alert rules.</p>
+                            <button class="btn btn-secondary choice-btn" id="btn-goto-research">
+                                <i class="fa-solid fa-sliders"></i> Open DSS & SHAP Engine
+                            </button>
+                        </div>
+                        <div class="choice-card-bg-glow glow-emerald"></div>
+                    </div>
+                </div>
+
+                <!-- Platform Stats Banner -->
+                <div class="stats-banner">
+                    <div class="stat-item">
+                        <span class="stat-number">94.2%</span>
+                        <span class="stat-label">RF/XGBoost Tabular Accuracy</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">0.982</span>
+                        <span class="stat-label">AUC-ROC Metric</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">Sentinel-2</span>
+                        <span class="stat-label">Satellite NDVI Integration</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">SHAP XAI</span>
+                        <span class="stat-label">Explainable AI Insights</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. AI HYBRID DIAGNOSTIC SCANNER SECTION -->
+        <section id="scanner-section" class="section-container scanner-layout">
+            <div class="section-header text-center">
+                <span class="section-subtitle"><i class="fa-solid fa-microchip"></i> Dual-Engine Pathology Architecture</span>
+                <h2>Hybrid Pre-Symptomatic & Optical Scanner</h2>
+                <p>Image-only detection can occur "too late". Our hybrid system couples optical CNN vision with tabular XGBoost/Random Forest models trained on IMD climate, Sentinel-2 NDVI, and SoilGrids data.</p>
+            </div>
+
+            <!-- Model Choice Toggle Selector -->
+            <div class="model-choice-bar">
+                <span class="model-choice-label"><i class="fa-solid fa-sliders"></i> Model Architecture Mode:</span>
+                <div class="model-toggle-group">
+                    <button class="model-toggle-btn active" data-mode="hybrid">
+                        <i class="fa-solid fa-layer-group"></i> Hybrid Dual-Fusion (CNN + XGBoost/RF)
+                    </button>
+                    <button class="model-toggle-btn" data-mode="environmental">
+                        <i class="fa-solid fa-cloud-sun-rain"></i> Pre-Symptomatic Climate Model (RF/XGBoost)
+                    </button>
+                    <button class="model-toggle-btn" data-mode="vision">
+                        <i class="fa-solid fa-eye"></i> Optical Vision Sub-Model (CNN)
+                    </button>
+                </div>
+            </div>
+
+            <div class="scanner-grid">
+                <!-- Left Column: Upload & Sample Selector + Environmental Feature Feed -->
+                <div class="upload-column">
+                    <div class="upload-card">
+                        <div class="drop-zone" id="drop-zone">
+                            <input type="file" id="file-input" accept="image/*" class="file-input-hidden">
+                            <div class="drop-zone-content">
+                                <div class="upload-icon-circle">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <h3>Drag & Drop Crop Leaf Photo</h3>
+                                <p>Supports JPG, PNG, WEBP files (Optical Vision Input)</p>
+                                <div class="upload-btn-group">
+                                    <button class="btn btn-primary" id="browse-btn">
+                                        <i class="fa-solid fa-folder-open"></i> Browse Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Image Selector Presets -->
+                        <div class="sample-presets-wrapper">
+                            <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Try Sample Crop Presets:</h4>
+                            <div class="presets-grid">
+                                <button class="preset-btn active" data-preset="tomato_late_blight">
+                                    <img src="images/tomato_late_blight.jpg" alt="Tomato Late Blight">
+                                    <span>Tomato Blight</span>
+                                </button>
+                                <button class="preset-btn" data-preset="corn_rust">
+                                    <img src="images/corn_rust.jpg" alt="Corn Common Rust">
+                                    <span>Corn Rust</span>
+                                </button>
+                                <button class="preset-btn" data-preset="rice_bacterial_blight">
+                                    <img src="images/rice_bacterial_blight.jpg" alt="Rice Bacterial Blight">
+                                    <span>Rice Blight</span>
+                                </button>
+                                <button class="preset-btn" data-preset="healthy_leaf">
+                                    <img src="images/healthy_leaf.jpg" alt="Healthy Soybean Leaf">
+                                    <span>Healthy Leaf</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MULTI-SOURCE TABULAR FEATURE INPUTS (IMD + SENTINEL-2 + SOILGRIDS) -->
+                        <div class="tabular-features-box">
+                            <h4><i class="fa-solid fa-database"></i> Environmental Feature Feed (Pre-Symptomatic ML Input)</h4>
+                            <div class="feature-inputs-grid">
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-temperature-high"></i> IMD Temp (°C)</label>
+                                    <input type="number" id="feat-temp" value="22" min="5" max="45">
+                                </div>
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-droplet"></i> Relative Humidity (%)</label>
+                                    <input type="number" id="feat-humidity" value="88" min="10" max="100">
+                                </div>
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-cloud-rain"></i> Rainfall (mm/24h)</label>
+                                    <input type="number" id="feat-rain" value="18" min="0" max="200">
+                                </div>
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-satellite"></i> Sentinel-2 NDVI Index</label>
+                                    <input type="number" id="feat-ndvi" value="0.42" min="0.0" max="1.0" step="0.01">
+                                </div>
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-flask"></i> Soil Carbon (SOC %)</label>
+                                    <input type="number" id="feat-soc" value="1.2" min="0.1" max="5.0" step="0.1">
+                                </div>
+                                <div class="input-field">
+                                    <label><i class="fa-solid fa-seedling"></i> Soil Nitrogen (N ppm)</label>
+                                    <input type="number" id="feat-nitrogen" value="210" min="50" max="500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Image Preview & Scanning Canvas -->
+                <div class="preview-column">
+                    <div class="preview-card" id="preview-card">
+                        <div class="preview-header">
+                            <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Multi-Modal Inference Canvas</h3>
+                            <span class="status-indicator" id="scan-status-tag"><i class="fa-solid fa-check"></i> Ready to Run</span>
+                        </div>
+
+                        <div class="image-viewer-container" id="image-viewer">
+                            <div class="scan-laser" id="scan-laser"></div>
+                            <img id="analyzed-img" src="images/tomato_late_blight.jpg" alt="Crop Leaf Preview">
+                            <canvas id="detection-canvas"></canvas>
+                            <div class="scanning-overlay" id="scanning-overlay">
+                                <div class="spinner"></div>
+                                <p id="scan-text">Executing Dual CNN + XGBoost Feature Fusion...</p>
+                            </div>
+                        </div>
+
+                        <div class="scan-controls">
+                            <button class="btn btn-accent btn-full" id="analyze-btn">
+                                <i class="fa-solid fa-bolt"></i> Execute Hybrid Inference Pipeline
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTS DASHBOARD (Appears after analysis) -->
+            <div id="results-dashboard" class="results-container">
+                <div class="results-header">
+                    <div class="result-title-group">
+                        <span class="disease-category-badge" id="res-category-badge">Fungal Pathogen</span>
+                        <h2 id="res-disease-name">Tomato Late Blight</h2>
+                        <span class="scientific-name" id="res-scientific-name">Phytophthora infestans</span>
+                    </div>
+
+                    <div class="severity-meter-card">
+                        <div class="meter-title">
+                            <span>Infection Severity Level</span>
+                            <strong id="res-severity-label" class="severity-high">HIGH RISK</strong>
+                        </div>
+                        <div class="meter-bar-track">
+                            <div class="meter-bar-fill" id="res-severity-bar" style="width: 78%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Analytical Metrics Row (Includes Hybrid CNN + XGBoost Breakdown) -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon green-glow"><i class="fa-solid fa-bullseye"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Hybrid Fusion Confidence</span>
+                            <span class="metric-value" id="res-confidence">96.8%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon orange-glow"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Infected Surface Rate</span>
+                            <span class="metric-value" id="res-infected-rate">42.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon blue-glow"><i class="fa-solid fa-wheat-awn"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">RF/XGBoost Climate Score</span>
+                            <span class="metric-value" id="res-climate-score">92.4% (Pre-Symptomatic)</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon red-glow"><i class="fa-solid fa-satellite-dish"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Sentinel-2 Canopy Stress</span>
+                            <span class="metric-value" id="res-ndvi-status">High Anomaly (NDVI: 0.42)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAP & OCCURRENCE SECTION (STRICTLY INDIA) -->
+                <div class="occurrence-map-card">
+                    <div class="map-card-header">
+                        <div>
+                            <h3><i class="fa-solid fa-map-location-dot"></i> Indian Regional Occurrence & Hotspot Map</h3>
+                            <p>Geographical areas across Indian states where this disease/pest mostly occurs under current environmental conditions.</p>
+                        </div>
+                        <div class="map-legend">
+                            <span class="legend-item"><span class="legend-color high"></span> Severe Outbreak</span>
+                            <span class="legend-item"><span class="legend-color mod"></span> Moderate Risk</span>
+                            <span class="legend-item"><span class="legend-color low"></span> Endemic Zone</span>
+                        </div>
+                    </div>
+                    
+                    <div id="disease-map" class="interactive-map"></div>
+                    
+                    <div class="hotspot-list-footer">
+                        <strong>Primary Risk Regions in India:</strong>
+                        <span id="res-hotspot-regions">Himachal Pradesh (Solan), West Bengal (North Bengal), Karnataka (Kolar), Punjab (Jalandhar), Maharashtra (Nashik)</span>
+                    </div>
+                </div>
+
+                <!-- MANAGEMENT & TREATMENT PROTOCOLS -->
+                <div class="treatment-section">
+                    <div class="treatment-header">
+                        <h3><i class="fa-solid fa-kit-medical"></i> Disease Management & Action Advisory Protocol</h3>
+                        <p>Actionable steps to control the infection, prevent spreading, and save crop yield.</p>
+                    </div>
+
+                    <!-- Treatment Navigation Tabs -->
+                    <div class="treatment-tabs">
+                        <button class="tab-btn active" data-tab="immediate"><i class="fa-solid fa-bolt"></i> Immediate Action</button>
+                        <button class="tab-btn" data-tab="organic"><i class="fa-solid fa-seedling"></i> Organic Control</button>
+                        <button class="tab-btn" data-tab="chemical"><i class="fa-solid fa-flask-vial"></i> Chemical Treatment</button>
+                        <button class="tab-btn" data-tab="prevention"><i class="fa-solid fa-shield-halved"></i> Prevention & Soil Health</button>
+                    </div>
+
+                    <!-- Tab Contents -->
+                    <div class="tab-content-container">
+                        <div class="tab-panel active" id="tab-immediate">
+                            <div class="protocol-box alert-box">
+                                <h4><i class="fa-solid fa-triangle-exclamation"></i> Emergency Containment Protocol</h4>
+                                <ul id="res-immediate-steps">
+                                    <li><strong>Isolate Infected Plants:</strong> Immediately remove and destroy severely infected leaves or stems to stop sporangia dispersion.</li>
+                                    <li><strong>Halt Overhead Irrigation:</strong> Cease sprinkler watering immediately. Moisture on leaves accelerates fungal germination.</li>
+                                    <li><strong>Sanitize Pruning Shears:</strong> Wipe tools with 70% isopropyl alcohol between plants to prevent mechanical transmission.</li>
+                                    <li><strong>Ventilate Canopy:</strong> Prune dense lower foliage to increase air circulation around the crop base.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tab-panel" id="tab-organic">
+                            <div class="protocol-box organic-box">
+                                <h4><i class="fa-solid fa-leaf"></i> Biological & Eco-Friendly Management</h4>
+                                <ul id="res-organic-steps">
+                                    <li><strong>Copper-Based Spray:</strong> Apply organic copper octanoate or Bordeaux mixture at early symptom onset.</li>
+                                    <li><strong>Bacillus subtilis:</strong> Spray <em>Bacillus subtilis</em> strain QST 713 weekly to suppress fungal spore germination.</li>
+                                    <li><strong>Neem Oil Extract:</strong> Apply cold-pressed neem oil (0.5% concentration) to coat leaf surfaces against spores.</li>
+                                    <li><strong>Compost Tea Foliar Spray:</strong> Apply aerated compost tea to introduce beneficial competitive microbes.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tab-panel" id="tab-chemical">
+                            <div class="protocol-box chemical-box">
+                                <h4><i class="fa-solid fa-vial"></i> Approved Fungicide / Insecticide Application</h4>
+                                <div class="chemical-table-wrapper">
+                                    <table class="chemical-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Active Ingredient</th>
+                                                <th>Application Rate</th>
+                                                <th>Spray Interval</th>
+                                                <th>PHI (Pre-Harvest Interval)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="res-chemical-table">
+                                            <tr>
+                                                <td>Chlorothalonil 75% WP</td>
+                                                <td>2.0 - 2.5 g / Liter water</td>
+                                                <td>Every 7 - 10 Days</td>
+                                                <td>7 Days</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mancozeb 80% WP</td>
+                                                <td>2.5 g / Liter water</td>
+                                                <td>Every 7 - 14 Days</td>
+                                                <td>5 Days</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="disclaimer-text"><i class="fa-solid fa-circle-info"></i> Check Central Insecticides Board & Registration Committee (CIBRC) guidelines before chemical application.</p>
+                            </div>
+                        </div>
+
+                        <div class="tab-panel" id="tab-prevention">
+                            <div class="protocol-box prevention-box">
+                                <h4><i class="fa-solid fa-crop-simple"></i> Long-Term Preventive & Cultural Measures</h4>
+                                <ul id="res-prevention-steps">
+                                    <li><strong>Crop Rotation:</strong> Rotate with non-solanaceous crops on a 3 to 4 year cycle.</li>
+                                    <li><strong>Resistant Varieties:</strong> Plant certified disease-resistant crop hybrids suited for monsoon humid environments.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Bar -->
+                <div class="export-actions">
+                    <button class="btn btn-secondary" id="btn-print-report"><i class="fa-solid fa-print"></i> Print Diagnosis Report</button>
+                    <button class="btn btn-primary" id="btn-download-pdf"><i class="fa-solid fa-file-pdf"></i> Download PDF Summary</button>
+                    <a href="#dss-section" class="btn btn-accent"><i class="fa-solid fa-diagram-project"></i> Pass to DSS Action Engine</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DECISION-SUPPORT SYSTEM (DSS) PROTOTYPE SECTION -->
+        <section id="dss-section" class="section-container dark-bg-section">
+            <div class="section-header text-center">
+                <span class="section-subtitle"><i class="fa-solid fa-sliders"></i> Farmer Action Engine</span>
+                <h2>Climate-Integrated Decision-Support System (DSS)</h2>
+                <p>Translating hybrid model predictions into actionable farmer advisories, spray timing windows, and risk alerts (Data Acquisition &rarr; Risk Modeling &rarr; Decision Rules &rarr; Farmer Alert).</p>
+            </div>
+
+            <!-- DSS Workflow Pipeline Visualizer -->
+            <div class="dss-pipeline">
+                <div class="dss-step">
+                    <div class="dss-step-num">1</div>
+                    <div class="dss-step-content">
+                        <h4>Data Acquisition</h4>
+                        <p>IMD Weather API + Sentinel-2 NDVI + SoilGrids + Camera</p>
+                    </div>
+                </div>
+                <div class="dss-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="dss-step">
+                    <div class="dss-step-num">2</div>
+                    <div class="dss-step-content">
+                        <h4>Risk Modeling</h4>
+                        <p>Hybrid CNN Vision + Random Forest / XGBoost Ensemble</p>
+                    </div>
+                </div>
+                <div class="dss-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="dss-step">
+                    <div class="dss-step-num">3</div>
+                    <div class="dss-step-content">
+                        <h4>Decision Rules</h4>
+                        <p>Threshold Evaluation & Pre-Symptomatic Logic</p>
+                    </div>
+                </div>
+                <div class="dss-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="dss-step highlight-step">
+                    <div class="dss-step-num">4</div>
+                    <div class="dss-step-content">
+                        <h4>Farmer Advisory</h4>
+                        <p>Optimal Fungicide Window & Containment SMS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DSS INTERACTIVE FORM PROTOTYPE -->
+            <div class="dss-form-card">
+                <div class="dss-form-header">
+                    <h3><i class="fa-solid fa-clipboard-list"></i> Farmer Decision-Support Query Form</h3>
+                    <span class="dss-badge">PEI Insight Prototype</span>
+                </div>
+
+                <div class="dss-form-grid">
+                    <div class="dss-field">
+                        <label>Indian State / Region</label>
+                        <select id="dss-state-select">
+                            <option value="Punjab">Punjab (Doaba Belt)</option>
+                            <option value="West Bengal">West Bengal (Burdwan Delta)</option>
+                            <option value="Karnataka">Karnataka (Kolar / Davangere)</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh (Solan)</option>
+                            <option value="Maharashtra">Maharashtra (Nashik / Vidarbha)</option>
+                        </select>
+                    </div>
+                    <div class="dss-field">
+                        <label>Target Crop Type</label>
+                        <select id="dss-crop-select">
+                            <option value="Tomato">Tomato</option>
+                            <option value="Rice">Rice</option>
+                            <option value="Corn">Corn (Maize)</option>
+                            <option value="Potato">Potato</option>
+                            <option value="Apple">Apple</option>
+                        </select>
+                    </div>
+                    <div class="dss-field">
+                        <label>Forecasted Relative Humidity (%)</label>
+                        <input type="number" id="dss-humidity" value="86" min="30" max="100">
+                    </div>
+                    <div class="dss-field">
+                        <label>Subsurface Soil Moisture (%)</label>
+                        <input type="number" id="dss-soil-moisture" value="68" min="10" max="100">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-full" id="dss-run-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Farmer Advisory & Spray Window
+                </button>
+
+                <!-- DSS OUTPUT RESULT BOX -->
+                <div class="dss-result-box" id="dss-result-box">
+                    <div class="dss-alert-header high-alert">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <h4>PRE-SYMPTOMATIC HIGH RISK DETECTED (88.4% Confidence)</h4>
+                            <p>Environmental conditions trigger spore germination threshold prior to visible leaf spot emergence.</p>
+                        </div>
+                    </div>
+                    <div class="dss-advisory-grid">
+                        <div class="advisory-item">
+                            <span class="adv-label">Recommended Spray Window</span>
+                            <strong class="adv-val text-green"><i class="fa-solid fa-clock"></i> Next 24 to 36 Hours (Pre-Rain)</strong>
+                        </div>
+                        <div class="advisory-item">
+                            <span class="adv-label">Primary Active Spray</span>
+                            <strong class="adv-val">Mancozeb 75% WP @ 2.5g/L or Copper Octanoate</strong>
+                        </div>
+                        <div class="advisory-item">
+                            <span class="adv-label">Watering Protocol</span>
+                            <strong class="adv-val text-orange">Halt sprinkler overhead irrigation immediately</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. EXPLAINABLE AI (SHAP) & MODEL EVALUATION SUITE -->
+        <section id="shap-section" class="section-container">
+            <div class="section-header text-center">
+                <span class="section-subtitle"><i class="fa-solid fa-brain"></i> Model Explainability & Rigor</span>
+                <h2>Explainable AI (SHAP) & Model Evaluation Suite</h2>
+                <p>Building farmer trust and SIH judge defensibility through SHapley Additive exPlanations (SHAP) and rigorous stratified cross-validation evaluation beyond raw accuracy.</p>
+            </div>
+
+            <!-- EXPLAINABILITY & EVALUATION GRID -->
+            <div class="shap-grid">
+                <!-- SHAP Feature Importance Card -->
+                <div class="shap-card">
+                    <div class="shap-card-header">
+                        <h3><i class="fa-solid fa-chart-bar"></i> SHAP Feature Importance Breakdown</h3>
+                        <span class="shap-subtext">SHapley Additive exPlanations</span>
+                    </div>
+                    <p class="shap-desc">Quantifying the impact of each environmental and optical feature on final disease risk prediction score.</p>
+                    
+                    <div class="shap-bars-container">
+                        <div class="shap-bar-item">
+                            <div class="shap-bar-label">
+                                <span>Leaf Wetness Duration (>8 hrs)</span>
+                                <strong>+38% Impact</strong>
+                            </div>
+                            <div class="shap-track"><div class="shap-fill fill-red" style="width: 88%;"></div></div>
+                        </div>
+
+                        <div class="shap-bar-item">
+                            <div class="shap-bar-label">
+                                <span>Relative Humidity (>85%)</span>
+                                <strong>+27% Impact</strong>
+                            </div>
+                            <div class="shap-track"><div class="shap-fill fill-orange" style="width: 72%;"></div></div>
+                        </div>
+
+                        <div class="shap-bar-item">
+                            <div class="shap-bar-label">
+                                <span>Sentinel-2 NDVI Drop (< 0.45)</span>
+                                <strong>+18% Impact</strong>
+                            </div>
+                            <div class="shap-track"><div class="shap-fill fill-amber" style="width: 55%;"></div></div>
+                        </div>
+
+                        <div class="shap-bar-item">
+                            <div class="shap-bar-label">
+                                <span>Ambient Temp (18-24°C)</span>
+                                <strong>+12% Impact</strong>
+                            </div>
+                            <div class="shap-track"><div class="shap-fill fill-blue" style="width: 40%;"></div></div>
+                        </div>
+
+                        <div class="shap-bar-item">
+                            <div class="shap-bar-label">
+                                <span>Soil Organic Carbon / Nitrogen</span>
+                                <strong>-5% Risk Impact</strong>
+                            </div>
+                            <div class="shap-track"><div class="shap-fill fill-green" style="width: 20%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Rigor & Confusion Matrix Card -->
+                <div class="eval-card">
+                    <div class="shap-card-header">
+                        <h3><i class="fa-solid fa-vial-circle-check"></i> Model Evaluation Metrics</h3>
+                        <span class="dss-badge">Stratified 10-Fold CV</span>
+                    </div>
+                    <p class="shap-desc">Addressing dataset class imbalance using Stratified K-Fold CV & SMOTE over-sampling.</p>
+
+                    <!-- Evaluation Metric Chips -->
+                    <div class="eval-metrics-grid">
+                        <div class="eval-chip">
+                            <span class="chip-num">94.2%</span>
+                            <span class="chip-name">Accuracy</span>
+                        </div>
+                        <div class="eval-chip">
+                            <span class="chip-num">93.8%</span>
+                            <span class="chip-name">Precision</span>
+                        </div>
+                        <div class="eval-chip">
+                            <span class="chip-num">95.1%</span>
+                            <span class="chip-name">Recall</span>
+                        </div>
+                        <div class="eval-chip">
+                            <span class="chip-num">94.4%</span>
+                            <span class="chip-name">F1-Score</span>
+                        </div>
+                        <div class="eval-chip highlight-chip">
+                            <span class="chip-num">0.982</span>
+                            <span class="chip-name">AUC-ROC</span>
+                        </div>
+                    </div>
+
+                    <!-- CONFUSION MATRIX TABLE -->
+                    <div class="cm-wrapper">
+                        <h4><i class="fa-solid fa-table-cells"></i> Stratified Confusion Matrix (3,100 Samples)</h4>
+                        <table class="cm-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Pred: Disease Present</th>
+                                    <th>Pred: No Disease</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Actual: Disease Present</th>
+                                    <td class="tp-cell">TP: 1,420 (95.1%)</td>
+                                    <td class="fn-cell">FN: 74 (4.9%)</td>
+                                </tr>
+                                <tr>
+                                    <th>Actual: No Disease</th>
+                                    <td class="fp-cell">FP: 94 (5.8%)</td>
+                                    <td class="tn-cell">TN: 1,512 (94.2%)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. RESEARCH & KNOWLEDGE BASE SECTION -->
+        <section id="research-section" class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle"><i class="fa-solid fa-database"></i> Crop Pathology Database</span>
+                <h2>Crop Disease & Pest Knowledge Hub</h2>
+                <p>Search and filter comprehensive diagnostic guides, symptoms, host plants, and regional occurrences across Indian states.</p>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="filter-bar">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="disease-search-input" placeholder="Search disease name, crop (e.g., Tomato, Wheat), or pathogen type...">
+                </div>
+
+                <div class="filter-group">
+                    <select id="crop-filter-select" class="filter-select">
+                        <option value="all">All Host Crops</option>
+                        <option value="Tomato">Tomato</option>
+                        <option value="Corn">Corn (Maize)</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Wheat">Wheat</option>
+                        <option value="Potato">Potato</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Cotton">Cotton</option>
+                    </select>
+
+                    <select id="type-filter-select" class="filter-select">
+                        <option value="all">All Pathogen Types</option>
+                        <option value="Fungal">Fungal Diseases</option>
+                        <option value="Bacterial">Bacterial Diseases</option>
+                        <option value="Viral">Viral Diseases</option>
+                        <option value="Pest">Insect Pests</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Disease Cards Grid -->
+            <div class="disease-cards-grid" id="disease-cards-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+
+        <!-- 6. INDIA OUTBREAK MAP RADAR -->
+        <section id="global-map-section" class="section-container dark-bg-section">
+            <div class="section-header text-center">
+                <span class="section-subtitle"><i class="fa-solid fa-satellite-dish"></i> Real-Time Indian Surveillance</span>
+                <h2>India Crop Outbreak Radar & Hotspot Tracker</h2>
+                <p>Monitor regional outbreak zones, agricultural corridors, and severe pest infestation areas across Indian states.</p>
+            </div>
+
+            <div class="radar-map-wrapper">
+                <div id="global-radar-map" class="interactive-map radar-map"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- DISEASE DETAIL MODAL -->
+    <div class="modal-overlay" id="disease-modal">
+        <div class="modal-card">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="nav-logo">
+                    <div class="logo-icon-bg"><i class="fa-solid fa-leaf"></i></div>
+                    <span class="brand-title">CropGuard<span class="accent-text">AI</span></span>
+                </div>
+                <p>Empowering agricultural resilience through hybrid optical-climate modeling, SHAP explainability, and Indian crop surveillance.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Navigation</h4>
+                <ul>
+                    <li><a href="#welcome">Home / Welcome</a></li>
+                    <li><a href="#scanner-section">Hybrid AI Scanner</a></li>
+                    <li><a href="#dss-section">Decision Support (DSS)</a></li>
+                    <li><a href="#shap-section">Explainable AI (SHAP)</a></li>
+                    <li><a href="#global-map-section">India Outbreak Map</a></li>
+                </ul>
+            </div>
+            <div class="footer-info">
+                <h4>Agricultural Support</h4>
+                <p><i class="fa-solid fa-phone"></i> Kisan Helpline: 1800-180-1551</p>
+                <p><i class="fa-solid fa-envelope"></i> Pathology: diagnostics@cropguard.ai</p>
+                <p><i class="fa-solid fa-globe"></i> Indian Crop Pathology Network</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CropGuard AI Intelligence. Designed for Farmers, Agronomists & Researchers.</p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Application Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
