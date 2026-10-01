@@ -1,3 +1,4 @@
+Check out the website: https://crop-disease-detection-2pqwsnxxefnzony6y95tr4.streamlit.app/
 # 🌿 CropGuard AI — Hybrid Early Detection & Decision-Support System
 
 **CropGuard AI** is a hybrid AI crop disease early detection platform combining CNN optical vision with Random Forest & XGBoost environmental modeling (IMD Weather, Sentinel-2 NDVI, SoilGrids, and SHAP XAI).
