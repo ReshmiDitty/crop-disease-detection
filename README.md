@@ -5,7 +5,7 @@
 ## 🚀 Live Demo & Deployment
 
 - **Streamlit Community Cloud:** Deployed via `app.py`
-- **GitHub Repository:** [ReshmiDitty/croppp](https://github.com/ReshmiDitty/croppp)
+- **GitHub Repository:** [ReshmiDitty/crop-disease-detection](https://github.com/ReshmiDitty/crop-disease-detection)
 
 ## 🛠️ Features
 
