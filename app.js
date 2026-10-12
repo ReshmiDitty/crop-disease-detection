@@ -203,22 +203,106 @@ document.addEventListener("DOMContentLoaded", () => {
     initTreatmentTabs();
     initResearchHub();
     initDSSForm();
+    initPEIPortal();
     
     // Auto load default sample scan
     loadDiseaseData("tomato_late_blight");
 
-    // Smooth scroll for hero buttons
-    document.getElementById("btn-goto-upload").addEventListener("click", () => {
-        document.getElementById("scanner-section").scrollIntoView({ behavior: "smooth" });
-    });
-    document.getElementById("btn-goto-research").addEventListener("click", () => {
-        document.getElementById("dss-section").scrollIntoView({ behavior: "smooth" });
-    });
-    document.getElementById("quick-scan-btn").addEventListener("click", () => {
-        document.getElementById("scanner-section").scrollIntoView({ behavior: "smooth" });
+    // SPA Page View Router
+    window.showPage = function(pageId) {
+        const validPages = ["home", "upload", "research"];
+        if (!validPages.includes(pageId)) pageId = "home";
+
+        // 1. Hide all page views
+        const pages = document.querySelectorAll(".page-view");
+        pages.forEach(p => p.classList.remove("active"));
+
+        // 2. Show target page view
+        const targetPage = document.getElementById("page-" + pageId);
+        if (targetPage) {
+            targetPage.classList.add("active");
+        }
+
+        // 3. Update top portal switcher buttons
+        const btnPortalChoice = document.getElementById("btn-portal-choice");
+        const btnPortalUpload = document.getElementById("btn-portal-upload");
+        const btnPortalPei = document.getElementById("btn-portal-pei");
+        [btnPortalChoice, btnPortalUpload, btnPortalPei].forEach(b => {
+            if (b) b.classList.remove("active");
+        });
+        if (pageId === "home" && btnPortalChoice) btnPortalChoice.classList.add("active");
+        if (pageId === "upload" && btnPortalUpload) btnPortalUpload.classList.add("active");
+        if (pageId === "research" && btnPortalPei) btnPortalPei.classList.add("active");
+
+        // 4. Update Navigation Links in Header
+        const navHome = document.getElementById("nav-front-home");
+        const navScanner = document.getElementById("nav-scanner-link");
+        const navPei = document.getElementById("nav-pei-home");
+        [navHome, navScanner, navPei].forEach(l => {
+            if (l) l.classList.remove("active");
+        });
+        if (pageId === "home" && navHome) navHome.classList.add("active");
+        if (pageId === "upload" && navScanner) navScanner.classList.add("active");
+        if (pageId === "research" && navPei) navPei.classList.add("active");
+
+        // 5. Scroll smoothly to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // 6. Invalidate Leaflet maps layout if entering upload / map page
+        if (pageId === "upload") {
+            setTimeout(() => {
+                if (diseaseMapInstance) {
+                    diseaseMapInstance.invalidateSize();
+                }
+                if (globalRadarMapInstance) {
+                    globalRadarMapInstance.invalidateSize();
+                }
+            }, 250);
+        }
+    };
+
+    // Action triggers for Front Page Choice Gateway
+    const btnChoiceUpload = document.getElementById("btn-choice-go-upload");
+    if (btnChoiceUpload) {
+        btnChoiceUpload.addEventListener("click", () => {
+            showPage("upload");
+        });
+    }
+
+    const btnChoiceResearch = document.getElementById("btn-choice-go-research");
+    if (btnChoiceResearch) {
+        btnChoiceResearch.addEventListener("click", () => {
+            showPage("research");
+        });
+    }
+
+    // Mini preset buttons on Front Page
+    const miniPresetBtns = document.querySelectorAll(".mini-preset-btn");
+    miniPresetBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const presetKey = btn.getAttribute("data-preset");
+            if (diseaseDatabase[presetKey]) {
+                loadDiseaseData(presetKey);
+                showPage("upload");
+                // Run analysis animation for user feedback
+                runDiagnosticScan();
+            }
+        });
     });
 
-    // Initialize Indian radar map when scrolled into view or after slight delay
+    // Header quick scan button
+    const quickScanBtn = document.getElementById("quick-scan-btn");
+    if (quickScanBtn) {
+        quickScanBtn.addEventListener("click", () => {
+            showPage("upload");
+            setTimeout(() => {
+                const fileInput = document.getElementById("file-input");
+                if (fileInput) fileInput.click();
+            }, 400);
+        });
+    }
+
+    // Initialize Indian radar map
     setTimeout(() => {
         initGlobalRadarMap();
     }, 600);
@@ -250,17 +334,7 @@ function initModelChoiceToggle() {
 
 // --- 4. NAVIGATION HEADER LOGIC ---
 function initNavigation() {
-    const navLinks = document.querySelectorAll(".nav-link");
-    window.addEventListener("scroll", () => {
-        let fromTop = window.scrollY + 200;
-        navLinks.forEach(link => {
-            let section = document.querySelector(link.hash);
-            if (section && section.offsetTop <= fromTop && section.offsetTop + section.offsetHeight > fromTop) {
-                navLinks.forEach(l => l.classList.remove("active"));
-                link.classList.add("active");
-            }
-        });
-    });
+    // Header navigation active states are managed through showPage()
 }
 
 // --- 5. PRESET SAMPLE SELECTOR LOGIC ---
@@ -795,3 +869,316 @@ window.openDiseaseModal = function(diseaseId) {
 
     document.getElementById("disease-modal").classList.add("active");
 };
+
+// --- 14. PEI POTATO INSIGHT & SPORE RESEARCH LOGIC ---
+function initPEIPortal() {
+    initPEIHotspots();
+    initPEIBenchmarkTable();
+    initPEICatalystPrototype();
+}
+
+// 14.1 PEI Field Hotspots Interaction
+function initPEIHotspots() {
+    const chipContainer = document.getElementById("hotspot-chip-container");
+    const detailContent = document.getElementById("hotspot-detail-content");
+    if (!chipContainer || !detailContent) return;
+
+    const hotspotData = {
+        "10": {
+            title: "Field 10 (Persistent Hotspot • Top Intervention Priority)",
+            color: "#f87171",
+            icon: "fa-triangle-exclamation",
+            text: "Registered persistent chronic high spore presence: <strong>82 cases in 2021</strong>, <strong>74 cases in 2022</strong>, and <strong>67 cases in 2023</strong>. Intervention recommendation: Targeted bio-fungicide and canopy thinning micro-treatments at Field 10 rather than indiscriminate island-wide prophylactic chemical spraying."
+        },
+        "14": {
+            title: "Field 14 (Historical Peak in 2020 • Subsequent Decline)",
+            color: "#f59e0b",
+            icon: "fa-chart-line-down",
+            text: "Recorded a severe local outbreak peaking in 2020 with <strong>79 cases</strong>, followed by steady decline in 2021–2023. Demonstrates that natural microclimate changes and localized sanitation can suppress spore colonies over subsequent years."
+        },
+        "5": {
+            title: "Field 5 (Late-Season Surging Hotspot • Escalating Trend)",
+            color: "#60a5fa",
+            icon: "fa-arrow-trend-up",
+            text: "Low initial incidence in 2019–2020 which escalated sharply into a late-season surging hotspot during 2022–2023. Identified alongside Field 10 as one of the two primary candidates for early protective bio-fungicide interventions."
+        },
+        "16": {
+            title: "Field 16 (Late-Season Surging Hotspot • Microclimate Drift)",
+            color: "#60a5fa",
+            icon: "fa-arrow-trend-up",
+            text: "Followed a trajectory similar to Field 5 with rapid incidence growth in 2022–2023. Strong correlation with prevailing downwind humidity channels from the Northumberland Strait."
+        },
+        "3": {
+            title: "Field 3 (Low Incidence / Resilient Control Zone)",
+            color: "#34d399",
+            icon: "fa-shield-halved",
+            text: "Exhibited minimal or zero spore counts across all five monitored seasons (2019–2023). Well-ventilated topography and soil drainage keep relative humidity below the Botrytis and Alternaria sporulation thresholds."
+        },
+        "11": {
+            title: "Field 11 (Minimal Spore Presence • Safe Agricultural Corridor)",
+            color: "#34d399",
+            icon: "fa-check-double",
+            text: "Near-zero spore captures across the 5-year study. Confirms strong spatial variability across PEI's 5,620 km² agricultural landscape, reinforcing the paper's argument against uniform prophylactic spraying."
+        },
+        "17": {
+            title: "Field 17 (Clean Baseline Field • Zero Spore Spike)",
+            color: "#34d399",
+            icon: "fa-seedling",
+            text: "Consistent absence of both Early Blight and Gray Mold spores throughout all seasonal sampling windows. Serves as a vital negative control baseline in the 1,482-instance dataset."
+        }
+    };
+
+    const chips = chipContainer.querySelectorAll(".hotspot-chip");
+    chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            chips.forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+
+            const fieldId = chip.getAttribute("data-field");
+            const data = hotspotData[fieldId] || hotspotData["10"];
+
+            detailContent.innerHTML = `
+                <strong style="color: ${data.color}; font-size: 1rem;">
+                    <i class="fa-solid ${data.icon}"></i> ${data.title}
+                </strong>
+                <p style="margin: 6px 0 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                    ${data.text}
+                </p>
+            `;
+        });
+    });
+}
+
+// 14.2 5-Classifier Benchmark Table Tabs
+function initPEIBenchmarkTable() {
+    const tbody = document.getElementById("benchmark-tbody");
+    const tabBtns = document.querySelectorAll(".benchmark-tab-btn");
+    if (!tbody || tabBtns.length === 0) return;
+
+    const benchmarkData = {
+        group: [
+            { name: "Random Forest (RF)", acc: "90%", prec: "93%", rec: "95%", f1: "94%", isTop: true, eval: "Top overall performer. Exceptional 95% Recall catches virtually every disease occurrence." },
+            { name: "XGBoost", acc: "90%", prec: "93%", rec: "94%", f1: "94%", isTop: true, eval: "Matches Random Forest performance, achieved after hyperparameter grid search tuning." },
+            { name: "Decision Tree (DT)", acc: "87%", prec: "94%", rec: "90%", f1: "92%", isTop: false, eval: "Second most robust classifier. Simpler, fully transparent and interpretable decision branches." },
+            { name: "K-Nearest Neighbors (KNN)", acc: "84%", prec: "88%", rec: "93%", f1: "90%", isTop: false, eval: "Moderate performance; sensitive to local feature density and noise." },
+            { name: "Logistic Regression (LR)", acc: "83%", prec: "83%", rec: "98%", f1: "90%", isTop: false, eval: "High recall (98%) but weakest precision (83%). Biased toward majority positive class." }
+        ],
+        eb: [
+            { name: "Random Forest (RF)", acc: "82%", prec: "84%", rec: "90%", f1: "87%", isTop: true, eval: "Best classifier for Early Blight. EB is harder to predict due to rainfall and heat stress variability." },
+            { name: "XGBoost", acc: "81%", prec: "80%", rec: "96%", f1: "87%", isTop: true, eval: "Exceptional 96% Recall; critical for preventing irreversible leaf spotting." },
+            { name: "Decision Tree (DT)", acc: "79%", prec: "87%", rec: "81%", f1: "84%", isTop: false, eval: "High precision (87%) with modest recall on complex multi-season test data." },
+            { name: "KNN", acc: "70%", prec: "76%", rec: "82%", f1: "79%", isTop: false, eval: "Struggles with non-linear interaction between rainfall and localized temperature." },
+            { name: "Logistic Regression", acc: "68%", prec: "70%", rec: "93%", f1: "80%", isTop: false, eval: "Lowest accuracy (68%); linear boundaries insufficient for Alternaria solani dynamics." }
+        ],
+        gm: [
+            { name: "XGBoost", acc: "94%", prec: "95%", rec: "99%", f1: "97%", isTop: true, eval: "Superior predictive power on Gray Mold. Reaches 97% F1-score with 99% recall." },
+            { name: "Random Forest (RF)", acc: "93%", prec: "94%", rec: "99%", f1: "96%", isTop: true, eval: "Extremely robust (93% accuracy, 99% recall). Highly consistent across folds." },
+            { name: "Logistic Regression", acc: "93%", prec: "93%", rec: "100%", f1: "96%", isTop: false, eval: "100% recall, but note: 0 True Negatives and 11 False Positives (predicted all positive)." },
+            { name: "K-Nearest Neighbors", acc: "91%", prec: "94%", rec: "97%", f1: "95%", isTop: false, eval: "Strong performance on Botrytis cinerea's clear humidity and wind boundaries." },
+            { name: "Decision Tree", acc: "89%", prec: "96%", rec: "93%", f1: "94%", isTop: false, eval: "Highest precision (96%) with strong 93% recall." }
+        ],
+        cv: [
+            { name: "Group Model: Random Forest", acc: "90% → 86%", prec: "-4% Shift", rec: "Stable", f1: "Top Rank", isTop: true, eval: "Stratified 5-Fold CV drops 4%; model ranking remains fully intact with minimal overfitting." },
+            { name: "Group Model: XGBoost", acc: "90% → 88%", prec: "-2% Shift", rec: "Stable", f1: "Top Rank", isTop: true, eval: "XGBoost edged out RF on CV folds (paired t-test p = 0.0247)." },
+            { name: "Group Model: Decision Tree", acc: "87% → 84%", prec: "-3% Shift", rec: "Stable", f1: "Robust", isTop: false, eval: "Reliable generalisation with low variance across all 5 cross-validation folds." },
+            { name: "Early Blight: Random Forest", acc: "82% → 74%", prec: "-8% Shift", rec: "Class Skew", f1: "EB Tougher", isTop: false, eval: "Larger CV drop in EB attributed to smaller fold sizes amplifying dataset class imbalance." },
+            { name: "Gray Mold: XGBoost", acc: "94% → 96%", prec: "+2% Shift", rec: "Outperformed", f1: "Superior", isTop: true, eval: "CV accuracy exceeded hold-out split (94% → 96%), confirming high generalizability." }
+        ]
+    };
+
+    function renderBenchmarkTable(mode) {
+        const rows = benchmarkData[mode] || benchmarkData.group;
+        tbody.innerHTML = rows.map(r => `
+            <tr>
+                <td><strong>${r.name}</strong> ${r.isTop ? '<span class="badge-top">Top Performer</span>' : ''}</td>
+                <td><strong style="color: #6ee7b7; font-family: var(--font-heading); font-size: 1.05rem;">${r.acc}</strong></td>
+                <td>${r.prec}</td>
+                <td>${r.rec}</td>
+                <td><strong>${r.f1}</strong></td>
+                <td style="font-size: 0.85rem; color: var(--text-muted);">${r.eval}</td>
+            </tr>
+        `).join("");
+    }
+
+    renderBenchmarkTable("group");
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tabBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderBenchmarkTable(btn.getAttribute("data-model-tab"));
+        });
+    });
+}
+
+// 14.3 "PEI Potato Insight Catalyst" Interactive Decision-Support Prototype
+function initPEICatalystPrototype() {
+    const tempInput = document.getElementById("cat-temp");
+    const precipInput = document.getElementById("cat-precip");
+    const humInput = document.getElementById("cat-humidity");
+    const windDirInput = document.getElementById("cat-wind-dir");
+    const windSpeedInput = document.getElementById("cat-wind-speed");
+
+    const valTemp = document.getElementById("val-cat-temp");
+    const valPrecip = document.getElementById("val-cat-precip");
+    const valHum = document.getElementById("val-cat-humidity");
+    const valWindDir = document.getElementById("val-cat-wind-dir");
+    const valWindSpeed = document.getElementById("val-cat-wind-speed");
+
+    if (!tempInput || !valTemp) return;
+
+    function getCompass(deg) {
+        const directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        const index = Math.round((deg % 360) / 22.5) % 16;
+        return `${deg}° (${directions[index]})`;
+    }
+
+    function updateSliderLabels() {
+        valTemp.textContent = `${tempInput.value}°C`;
+        valPrecip.textContent = `${precipInput.value} mm`;
+        valHum.textContent = `${humInput.value}%`;
+        valWindDir.textContent = getCompass(windDirInput.value);
+        valWindSpeed.textContent = `${windSpeedInput.value} km/h`;
+    }
+
+    [tempInput, precipInput, humInput, windDirInput, windSpeedInput].forEach(inp => {
+        inp.addEventListener("input", updateSliderLabels);
+    });
+
+    // Preset buttons
+    const btnPreGm = document.getElementById("preset-cat-gm-surge");
+    const btnPreEb = document.getElementById("preset-cat-eb-rain");
+    const btnPreClean = document.getElementById("preset-cat-clean");
+
+    if (btnPreGm) {
+        btnPreGm.addEventListener("click", () => {
+            document.getElementById("cat-model-type").value = "gm";
+            tempInput.value = 18.5;
+            precipInput.value = 42;
+            humInput.value = 93;
+            windDirInput.value = 210;
+            windSpeedInput.value = 11;
+            updateSliderLabels();
+            runCatalystInference();
+        });
+    }
+
+    if (btnPreEb) {
+        btnPreEb.addEventListener("click", () => {
+            document.getElementById("cat-model-type").value = "eb";
+            tempInput.value = 24.5;
+            precipInput.value = 65;
+            humInput.value = 83;
+            windDirInput.value = 180;
+            windSpeedInput.value = 22;
+            updateSliderLabels();
+            runCatalystInference();
+        });
+    }
+
+    if (btnPreClean) {
+        btnPreClean.addEventListener("click", () => {
+            document.getElementById("cat-model-type").value = "group";
+            tempInput.value = 21.0;
+            precipInput.value = 4;
+            humInput.value = 52;
+            windDirInput.value = 315;
+            windSpeedInput.value = 19;
+            updateSliderLabels();
+            runCatalystInference();
+        });
+    }
+
+    // Run Button
+    const runBtn = document.getElementById("btn-run-catalyst");
+    if (runBtn) {
+        runBtn.addEventListener("click", runCatalystInference);
+    }
+
+    function runCatalystInference() {
+        const growerName = document.getElementById("cat-grower-name").value || "MacLean Farm Field 10";
+        const modelType = document.getElementById("cat-model-type").value;
+        const station = document.getElementById("cat-station").value;
+
+        const temp = parseFloat(tempInput.value);
+        const precip = parseFloat(precipInput.value);
+        const hum = parseFloat(humInput.value);
+        const windSpeed = parseFloat(windSpeedInput.value);
+
+        // Core statistical scoring based on paper's feature importance
+        // EB drivers: Location, Precip, Temp
+        // GM drivers: Relative Humidity, Wind Direction, Temp, Dew Point
+        let riskScore = 0;
+        let diseaseName = "";
+        let chemicalSpray = "";
+
+        if (modelType === "gm") {
+            diseaseName = "Gray Mold (Botrytis cinerea)";
+            chemicalSpray = "Boscalid, Fenhexamid, or Chlorothalonil 75% WP";
+            // Heavy humidity weight
+            riskScore = (hum - 50) * 1.5 + (temp >= 15 && temp <= 22 ? 25 : 8) + (precip * 0.3) - (windSpeed * 0.4);
+        } else if (modelType === "eb") {
+            diseaseName = "Early Blight (Alternaria solani)";
+            chemicalSpray = "Mancozeb 80% WP, Azoxystrobin, or Difenoconazole";
+            // Heavy precip and heat weight
+            riskScore = (precip * 0.8) + (temp >= 20 ? 30 : 10) + (hum * 0.5);
+        } else {
+            diseaseName = (hum > 85 && temp < 21) ? "Gray Mold" : "Early Blight";
+            chemicalSpray = "Broad-Spectrum Mancozeb + Chlorothalonil Tank Mix";
+            riskScore = (hum * 0.6) + (precip * 0.5) + (temp * 0.8);
+        }
+
+        const clampedScore = Math.max(12, Math.min(97.5, riskScore));
+        const dispersalIndex = (clampedScore / 10).toFixed(1);
+        const probText = clampedScore.toFixed(1) + "%";
+
+        const resPanel = document.getElementById("catalyst-result-panel");
+        const outGrower = document.getElementById("out-grower-name");
+        const outRiskTitle = document.getElementById("out-risk-title");
+        const outBadge = document.getElementById("out-risk-badge");
+        const outSporeProb = document.getElementById("out-spore-prob");
+        const outDispersal = document.getElementById("out-dispersal-index");
+        const outPhase = document.getElementById("out-infection-phase");
+        const outWindow = document.getElementById("out-spray-window");
+        const outAdvisory = document.getElementById("out-advisory-text");
+        const outChemical = document.getElementById("out-chemical-rec");
+
+        outGrower.textContent = growerName + " (" + station + ")";
+        outSporeProb.textContent = probText;
+        outDispersal.textContent = dispersalIndex + " / 10";
+        outChemical.textContent = chemicalSpray;
+
+        if (clampedScore >= 75) {
+            outRiskTitle.textContent = "High Risk of " + diseaseName;
+            outBadge.className = "catalyst-risk-badge cat-risk-high";
+            outBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> HIGH RISK';
+            outPhase.textContent = "Pre-Symptomatic Inoculation Phase";
+            outPhase.style.color = "#fca5a5";
+            outWindow.textContent = "Next 24 to 48 Hours (Pre-Rain)";
+            outWindow.style.color = "#ef4444";
+            outAdvisory.innerHTML = `Environmental conditions at <strong>${station}</strong> (RH: ${hum}%, Rain: ${precip}mm, Temp: ${temp}°C) cross the critical spore germination threshold for <strong>${diseaseName}</strong>. Spores are actively circulating prior to visible leaf necrosis. Deploy protective fungicide spray within the pre-infection window to prevent canopy penetration.`;
+        } else if (clampedScore >= 45) {
+            outRiskTitle.textContent = "Moderate Advisory: Monitor " + diseaseName;
+            outBadge.className = "catalyst-risk-badge cat-risk-mod";
+            outBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> MODERATE ALERT';
+            outPhase.textContent = "Favorable Spore Incubation";
+            outPhase.style.color = "#fcd34d";
+            outWindow.textContent = "Next 3 to 5 Days";
+            outWindow.style.color = "#f59e0b";
+            outAdvisory.innerHTML = `Microclimate variables indicate elevated spore pressure at <strong>${station}</strong>. While full germination thresholds are not yet breached, monitor weather shifts over the next 48 hours and inspect downwind field rows.`;
+        } else {
+            outRiskTitle.textContent = "Low Risk: Pathogen Pressure Sub-Threshold";
+            outBadge.className = "catalyst-risk-badge cat-risk-low";
+            outBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> LOW RISK';
+            outPhase.textContent = "Sub-Threshold Dormancy";
+            outPhase.style.color = "#a7f3d0";
+            outWindow.textContent = "Standard 7-Day Scout Interval";
+            outWindow.style.color = "#10b981";
+            outAdvisory.innerHTML = `Current weather conditions at <strong>${station}</strong> do not favor spore germination. Relative humidity and rainfall remain well below biological thresholds for both Early Blight and Gray Mold. Maintain routine IPM scouting.`;
+        }
+
+        resPanel.style.display = "block";
+        resPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+}
+

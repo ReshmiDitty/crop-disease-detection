@@ -25,28 +25,27 @@
     <!-- Navigation Header -->
     <header class="navbar">
         <div class="nav-container">
-            <a href="#welcome" class="nav-logo" id="logo-link">
+            <a href="javascript:void(0)" onclick="showPage('home')" class="nav-logo" id="logo-link">
                 <div class="logo-icon-bg">
                     <i class="fa-solid fa-leaf"></i>
                 </div>
                 <div class="logo-text">
                     <span class="brand-title">CropGuard<span class="accent-text">AI</span></span>
-                    <span class="brand-subtitle">Hybrid Pathology & DSS Platform</span>
+                    <span class="brand-subtitle">Diagnostic Scanner &amp; Spore Intelligence</span>
                 </div>
             </a>
-            
+
             <nav class="nav-menu">
-                <a href="#welcome" class="nav-link active" id="nav-home"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="#scanner-section" class="nav-link" id="nav-scanner"><i class="fa-solid fa-network-wired"></i> Hybrid AI Engine</a>
-                <a href="#dss-section" class="nav-link" id="nav-dss"><i class="fa-solid fa-square-poll-vertical"></i> Decision Support (DSS)</a>
-                <a href="#shap-section" class="nav-link" id="nav-shap"><i class="fa-solid fa-brain"></i> Explainable AI (SHAP)</a>
-                <a href="#research-section" class="nav-link" id="nav-research"><i class="fa-solid fa-book-bookmark"></i> Disease Hub</a>
-                <a href="#global-map-section" class="nav-link" id="nav-map"><i class="fa-solid fa-map-location-dot"></i> India Map</a>
+                <a href="javascript:void(0)" onclick="showPage('home')" class="nav-link active" id="nav-front-home"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="javascript:void(0)" onclick="showPage('upload')" class="nav-link" id="nav-scanner-link"><i class="fa-solid fa-bolt"></i> Upload &amp; Analysis</a>
+                <a href="javascript:void(0)" onclick="showPage('research')" class="nav-link" id="nav-pei-home"><i class="fa-solid fa-flask"></i> Research Study</a>
+                <a href="javascript:void(0)" onclick="showPage('upload'); setTimeout(() => { const el = document.getElementById('dss-section'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200);" class="nav-link" id="nav-dss-link"><i class="fa-solid fa-square-poll-vertical"></i> DSS</a>
+                <a href="javascript:void(0)" onclick="showPage('upload'); setTimeout(() => { const el = document.getElementById('global-map-section'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200);" class="nav-link" id="nav-map-link"><i class="fa-solid fa-map-location-dot"></i> Outbreak Map</a>
             </nav>
 
             <div class="nav-actions">
-                <button class="btn btn-primary" id="quick-scan-btn">
-                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Upload & Test
+                <button class="btn btn-primary" id="quick-scan-btn" onclick="showPage('upload'); setTimeout(() => { const fi = document.getElementById('file-input'); if(fi) fi.click(); }, 300);">
+                    <i class="fa-solid fa-camera"></i> Upload Photo
                 </button>
             </div>
         </div>
@@ -54,59 +53,788 @@
 
     <!-- Main Container -->
     <main>
-        <!-- 1. WELCOME / OPENING HERO PAGE -->
-        <section id="welcome" class="hero-section">
-            <div class="hero-backdrop"></div>
-            <div class="hero-content-wrapper">
-                <div class="hero-badge">
-                    <span class="pulse-dot"></span> Pre-Symptomatic & Optical Hybrid AI Framework
-                </div>
-                
-                <h1 class="hero-title">
-                    Early Crop Disease Detection & <span class="highlight-gradient">Decision-Support System</span>
-                </h1>
-                
-                <p class="hero-lead">
-                    Combining <strong>Optical CNN Vision</strong> with <strong>Random Forest & XGBoost Climate/Soil Ensembles</strong> (IMD Weather, Sentinel-2 NDVI Satellite Data, SoilGrids) for pre-symptomatic risk forecasting and farmer action advisories.
-                </p>
+        <!-- ========================================================
+             PAGE 1: HOME PORTAL - WORKSPACE SELECTION
+             ======================================================== -->
+        <div id="page-home" class="page-view active">
+            <section id="front-page" class="front-gateway-section">
+                <div class="section-container">
+                    <div class="front-gateway-header">
+                        <div class="front-gateway-badge">
+                            <i class="fa-solid fa-shield-halved"></i> Precision Agricultural Pathology &amp; Spore Intelligence
+                        </div>
+                        <h1 class="front-gateway-title">
+                            CropGuard AI: Precision Pathology &amp; <span class="highlight-gradient">Epidemiology Portal</span>
+                        </h1>
+                        <p class="front-gateway-subtitle">
+                            Select your operational workspace below: Open the <strong>Diagnostic Scanner &amp; Map</strong> to upload crop leaf photography for dual-model optical CNN &amp; tabular climate inference, or explore the <strong>5-Year Aerobiology Spore Study</strong> detailing meteorological pre-symptomatic modeling in Prince Edward Island.
+                        </p>
 
-                <!-- DUAL CHOICE SELECTION CARDS -->
-                <div class="choice-cards-grid">
-                    <!-- Choice A: Upload & Identify -->
-                    <div class="choice-card choice-identify" id="choice-upload-card">
-                        <div class="choice-icon-wrapper">
-                            <i class="fa-solid fa-camera-retro"></i>
-                        </div>
-                        <div class="choice-content">
-                            <span class="choice-tag">Hybrid Diagnostic Scanner</span>
-                            <h2>Identify Disease via Image & Environmental Data</h2>
-                            <p>Upload a leaf image or input microclimate data (IMD weather + soil). Get instant dual-model diagnosis, severity %, Indian hotspot maps, and treatment timing.</p>
-                            <button class="btn btn-accent choice-btn" id="btn-goto-upload">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Run Hybrid AI Scanner
-                            </button>
-                        </div>
-                        <div class="choice-card-bg-glow glow-green"></div>
+
                     </div>
 
-                    <!-- Choice B: Decision Support System Prototype -->
-                    <div class="choice-card choice-research" id="choice-research-card">
-                        <div class="choice-icon-wrapper">
-                            <i class="fa-solid fa-diagram-project"></i>
+                    <!-- DUAL PRIMARY CHOICE CARDS (Direct prompt to the user) -->
+                    <div class="front-dual-choice-grid">
+                        <!-- Choice 1: Upload Photo & Check Analysis & Map -->
+                        <div class="front-choice-box choice-upload-box" id="card-choice-upload">
+                            <div class="choice-box-badge">⭐ Recommended For Field Photos</div>
+                            <div class="choice-box-icon">
+                                <i class="fa-solid fa-camera-retro"></i>
+                            </div>
+                            <h2>Upload &amp; Scan</h2>
+                            <p>
+                                Have a crop leaf photo? Upload it directly to trigger our <strong>Dual Optical CNN Vision + Environmental XGBoost Scanner</strong>. Detect lesion boundaries, determine severity level %, review approved fungicide/organic treatments, and examine the Indian regional outbreak map.
+                            </p>
+
+                            <div class="choice-quick-actions">
+                                <button class="btn btn-accent btn-full" id="btn-choice-go-upload" onclick="showPage('upload')" style="font-size: 1.05rem; padding: 14px;">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload Leaf Image &rarr;
+                                </button>
+
+                                <div class="quick-preset-hint">
+                                    <span><i class="fa-solid fa-wand-magic-sparkles"></i> Or test immediately with sample presets:</span>
+                                    <div class="front-preset-pills">
+                                        <button class="mini-preset-btn" data-preset="tomato_late_blight">🍅 Tomato Blight</button>
+                                        <button class="mini-preset-btn" data-preset="corn_rust">🌽 Corn Rust</button>
+                                        <button class="mini-preset-btn" data-preset="rice_bacterial_blight">🌾 Rice Blight</button>
+                                        <button class="mini-preset-btn" data-preset="healthy_leaf">🍃 Healthy Leaf</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="choice-content">
-                            <span class="choice-tag">SIH Judge Support DSS</span>
-                            <h2>Explore Decision-Support System (DSS) Prototype</h2>
-                            <p>Test the 4-stage climate-integrated DSS architecture, view SHAP model explainability, evaluation metrics (F1, AUC-ROC, Confusion Matrix), and farmer alert rules.</p>
-                            <button class="btn btn-secondary choice-btn" id="btn-goto-research">
-                                <i class="fa-solid fa-sliders"></i> Open DSS & SHAP Engine
-                            </button>
+
+                        <!-- Choice 2: See Research Contents & Spore Study -->
+                        <div class="front-choice-box choice-content-box" id="card-choice-research">
+                            <div class="choice-box-badge" style="background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd;">🔬 5-Year Aerobiology Study</div>
+                            <div class="choice-box-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                            </div>
+                            <h2>Research Study</h2>
+                            <p>
+                                Want to inspect the aerobiological research? Explore the complete <strong>8-part study on Early Blight &amp; Gray Mold in Prince Edward Island</strong>: Problem &amp; $380M motivation, 1,482 spore samples across 19 fields, 5-classifier benchmark, and run the live <strong>PEI Potato Insight Catalyst</strong> prototype.
+                            </p>
+
+                            <div class="choice-quick-actions">
+                                <button class="btn btn-secondary btn-full" id="btn-choice-go-research" onclick="showPage('research')" style="font-size: 1.05rem; padding: 14px;">
+                                    <i class="fa-solid fa-flask"></i> View Research Study &rarr;
+                                </button>
+
+                                <div class="quick-preset-hint">
+                                    <span><i class="fa-solid fa-calculator"></i> Includes: Data, Field 10 Hotspots, 5 Classifiers &amp; PEI Catalyst Tool</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="choice-card-bg-glow glow-emerald"></div>
+                    </div>
+                </div>
+            </section>
+        </div> <!-- End #page-home -->
+
+        <!-- ========================================================
+             PAGE 3: 5-YEAR PEI SPORE RESEARCH STUDY & CATALYST TOOL
+             ======================================================== -->
+        <div id="page-research" class="page-view">
+            <div class="section-container page-top-bar">
+                <div class="page-breadcrumb">
+                    <a href="javascript:void(0)" onclick="showPage('home')"><i class="fa-solid fa-house"></i> Home</a>
+                    <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+                    <span>Prince Edward Island (PEI) Multi-Modal Spore Aerobiology Study (2019–2023)</span>
+                </div>
+                <button class="btn-back-home" onclick="showPage('home')">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Main Home
+                </button>
+            </div>
+
+            <section id="pei-portal" class="pei-portal-wrapper">
+            <!-- PEI HERO SECTION -->
+            <div class="pei-hero">
+                <div class="section-container">
+                    <div class="pei-hero-badge">
+                        <i class="fa-solid fa-map-location-dot"></i> Prince Edward Island (PEI) Multi-Modal Spore Study (2019–2023) &bull; Airspore &amp; PEI Potato Board
+                    </div>
+                    
+                    <h1 class="pei-hero-title">
+                        Pre-Symptomatic Potato Disease Intelligence:<br>
+                        <span class="highlight-gradient">Spore Trapping &amp; Meteorological Machine Learning</span>
+                    </h1>
+                    
+                    <p class="pei-hero-lead">
+                        Prince Edward Island produces <strong>over 20% of Canada's potatoes</strong>, contributing <strong>$380.1M in farm revenue</strong>. Because conventional deep learning vision (CNNs with &gt;98% accuracy) detects symptoms only <em>after</em> physical lesions appear, this 5-year landmark study unites physical airborne spore trapping with meteorological classifiers (Random Forest, XGBoost, Decision Tree, KNN, Logistic Regression) for true pre-symptomatic disease intervention.
+                    </p>
+
+                    <div class="pei-cta-row">
+                        <a href="#pei-catalyst" class="btn btn-accent" id="btn-hero-catalyst">
+                            <i class="fa-solid fa-bolt"></i> Launch "PEI Potato Insight Catalyst" Prototype
+                        </a>
+                        <a href="#pei-benchmark" class="btn btn-secondary">
+                            <i class="fa-solid fa-chart-column"></i> Explore 5-Classifier Benchmark
+                        </a>
+                        <a href="#cropguard-platform" class="btn btn-primary" id="btn-hero-cropguard">
+                            <i class="fa-solid fa-arrow-down"></i> Proceed to Current CropGuard Platform &rarr;
+                        </a>
+                    </div>
+
+                    <!-- Key Study Metrics Ribbon -->
+                    <div class="pei-stat-ribbon">
+                        <div class="pei-stat-box">
+                            <div class="pei-stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+                            <div>
+                                <span class="pei-stat-number">$380.1M</span>
+                                <span class="pei-stat-desc">PEI Potato Revenue (of $828M Total)</span>
+                            </div>
+                        </div>
+                        <div class="pei-stat-box">
+                            <div class="pei-stat-icon"><i class="fa-solid fa-seedling"></i></div>
+                            <div>
+                                <span class="pei-stat-number">&gt;20%</span>
+                                <span class="pei-stat-desc">Canada's Entire Potato Production</span>
+                            </div>
+                        </div>
+                        <div class="pei-stat-box">
+                            <div class="pei-stat-icon"><i class="fa-solid fa-vial"></i></div>
+                            <div>
+                                <span class="pei-stat-number">1,482</span>
+                                <span class="pei-stat-desc">Weekly Multi-Modal Spore Samples</span>
+                            </div>
+                        </div>
+                        <div class="pei-stat-box">
+                            <div class="pei-stat-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <div>
+                                <span class="pei-stat-number">90%</span>
+                                <span class="pei-stat-desc">Group Model Accuracy (RF &amp; XGBoost)</span>
+                            </div>
+                        </div>
+                        <div class="pei-stat-box">
+                            <div class="pei-stat-icon"><i class="fa-solid fa-shield-virus"></i></div>
+                            <div>
+                                <span class="pei-stat-number">94%</span>
+                                <span class="pei-stat-desc">Gray Mold Specific Model (XGBoost)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-container">
+                <!-- 1. PROBLEM AND MOTIVATION -->
+                <div class="pei-section" id="pei-motivation">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-triangle-exclamation"></i> Section 1 &bull; Agricultural Motivation</span>
+                        <h2>The Potato Disease Crisis &amp; The Optical Vision Dilemma</h2>
+                        <p>Globally, 20–40% of agricultural crops are lost annually to pests and diseases. In Prince Edward Island, changing climate patterns threaten regional food security and farm livelihoods.</p>
+                    </div>
+
+                    <div class="pei-grid-2">
+                        <!-- Early Blight Profile -->
+                        <div class="pei-card pathogen-card">
+                            <div class="pathogen-header">
+                                <div>
+                                    <h3 class="pathogen-name">Early Blight (EB)</h3>
+                                    <span class="pathogen-scientific">Alternaria solani &bull; Fungal Pathogen</span>
+                                </div>
+                                <span class="loss-pill">10% – 34% Yield Loss</span>
+                            </div>
+                            <div class="pathogen-body">
+                                <p>Spread by wind and driving rain. Favored by alternating periods of high rainfall and warm temperature stress. Causes dark, concentric brown spots ("target-board" lesions) leading to premature defoliation and tuber rotting.</p>
+                                <ul class="pathogen-driver-list">
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Primary Drivers:</strong> Farm location, cumulative precipitation &amp; ambient temperature.</li>
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Spore Mechanics:</strong> Moderate spore production (mean 33 spores/m³, peak 2,099 spores/m³).</li>
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Seasonality:</strong> Spread consistently throughout the PEI growing season.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Gray Mold Profile -->
+                        <div class="pei-card pathogen-card">
+                            <div class="pathogen-header">
+                                <div>
+                                    <h3 class="pathogen-name">Gray Mold (GM)</h3>
+                                    <span class="pathogen-scientific">Botrytis cinerea &bull; Necrotrophic Fungus</span>
+                                </div>
+                                <span class="loss-pill gm-pill">20% – 50% Yield Loss</span>
+                            </div>
+                            <div class="pathogen-body">
+                                <p>Devastating fungal infection producing fuzzy gray-brown mycelia. Thrives in cool-to-moderate temperatures under prolonged relative humidity and dense, poorly ventilated canopy microclimates.</p>
+                                <ul class="pathogen-driver-list">
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Primary Drivers:</strong> Relative humidity (&gt;85%), wind direction, temperature &amp; dew point.</li>
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Spore Mechanics:</strong> Enormous spore volume (mean 422 spores/m³, peak 21,000 spores/m³).</li>
+                                    <li><i class="fa-solid fa-check-circle"></i> <strong>Seasonality:</strong> High early-season volatility with rapid explosive surges.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- The Optical Vision Dilemma -->
+                        <div class="vision-paradox-box">
+                            <h3><i class="fa-solid fa-circle-exclamation"></i> The Core AI Bottleneck: Why Image-Only Deep Learning Is Not Enough</h3>
+                            <p>Most existing AI literature relies on image-based deep learning (MobileNetV2, ResNet50, YOLO, CNN ensembles) boasting &gt;98% test set accuracy. However, this creates a critical agricultural paradox:</p>
+                            
+                            <div class="paradox-grid">
+                                <div class="paradox-col flaw">
+                                    <h4><i class="fa-solid fa-xmark"></i> Late-Stage Optical Vision (Post-Infection)</h4>
+                                    <p>CNNs require visible tissue necrosis or spots. Once leaf symptoms are visually discernible by a camera, fungal mycelia have already penetrated plant cell walls. By this stage, preventive fungicides are ineffective, requiring expensive curative systemic sprays that risk chemical resistance and yield forfeiture.</p>
+                                </div>
+                                <div class="paradox-col solution">
+                                    <h4><i class="fa-solid fa-check"></i> Pre-Symptomatic Spore ML (Pre-Infection)</h4>
+                                    <p>By capturing airborne fungal spores (Airspore impaction collectors) and pairing them with microclimate weather data, machine learning predicts spore inoculation and germination days before physical leaf lesions appear. Farmers can deploy precision protective fungicide sprays within the optimal pre-infection window.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Platform Stats Banner -->
-                <div class="stats-banner">
+                <!-- 2. RESEARCH GAP AND CONTRIBUTIONS -->
+                <div class="pei-section" id="pei-contributions">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-lightbulb"></i> Section 2 &bull; Scientific Gap</span>
+                        <h2>Research Gap &amp; Key Scientific Contributions</h2>
+                        <p>Bridging the disconnect between pure meteorological forecasting, laboratory aerobiology, and practical decision-support software for Atlantic Canada's agriculture.</p>
+                    </div>
+
+                    <div class="pei-grid-4">
+                        <div class="contribution-card">
+                            <span class="contribution-num">01</span>
+                            <div class="contribution-icon"><i class="fa-solid fa-database"></i></div>
+                            <h4>Novel 5-Year Dataset</h4>
+                            <p>First multi-modal dataset (2019–2023) fusing continuous biological spore trap counts with comprehensive Government of Canada meteorological feeds.</p>
+                        </div>
+                        <div class="contribution-card">
+                            <span class="contribution-num">02</span>
+                            <div class="contribution-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                            <h4>Focus on EB &amp; GM</h4>
+                            <p>First dedicated study on understudied Early Blight and Gray Mold in Atlantic Canada, where Late Blight had historically monopolized pathology research.</p>
+                        </div>
+                        <div class="contribution-card">
+                            <span class="contribution-num">03</span>
+                            <div class="contribution-icon"><i class="fa-solid fa-code-compare"></i></div>
+                            <h4>5-Classifier Benchmark</h4>
+                            <p>Systematic comparison of 5 machine learning classifiers (Random Forest, XGBoost, Decision Tree, KNN, Logistic Regression) using stratified CV and paired t-tests.</p>
+                        </div>
+                        <div class="contribution-card">
+                            <span class="contribution-num">04</span>
+                            <div class="contribution-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                            <h4>Actionable Farmer Prototype</h4>
+                            <p>Development and deployment of the "PEI Potato Insight Catalyst" prototype, delivering immediate risk calculations and spray windows for growers.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. DATA AND METHODS -->
+                <div class="pei-section" id="pei-data">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-flask-vial"></i> Section 3 &bull; Experimental Methodology</span>
+                        <h2>Data Collection, Study Site &amp; Machine Learning Pipeline</h2>
+                        <p>Spanning 5,620 km² across Prince Edward Island with ~175 potato producers managing approximately 34,000 hectares of commercial potato fields.</p>
+                    </div>
+
+                    <div class="pei-grid-2">
+                        <!-- Spore Collection Specifications -->
+                        <div class="pei-card methodology-specs-card">
+                            <h3 style="color:#ffffff; margin-bottom: 8px;"><i class="fa-solid fa-wind" style="color:var(--accent-emerald);"></i> Physical Spore Trapping Protocol</h3>
+                            
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-building-columns"></i> Executing Partners</span>
+                                <span class="spec-val">PEI Potato Board &amp; Airspore Inc.</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-calendar-days"></i> Sampling Cadence</span>
+                                <span class="spec-val">3× Weekly during growing season (Mid-May to Mid-Oct)</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-fan"></i> Impaction Sampler Specs</span>
+                                <span class="spec-val">Pump-driven impaction at 15 L/min for 15 minutes</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-location-arrow"></i> Sampler Placement</span>
+                                <span class="spec-val">Downwind at potato canopy height</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-sun"></i> Diurnal Timing</span>
+                                <span class="spec-val">Within ~4 hours of sunrise or dew evaporation</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-microscope"></i> Laboratory Counting</span>
+                                <span class="spec-val">Phase-contrast microscopy (400–1000&times;), spores/m³</span>
+                            </div>
+                        </div>
+
+                        <!-- Weather & Dataset Specifications -->
+                        <div class="pei-card methodology-specs-card">
+                            <h3 style="color:#ffffff; margin-bottom: 8px;"><i class="fa-solid fa-cloud-sun" style="color:var(--accent-emerald);"></i> Meteorology &amp; Dataset Matrix</h3>
+                            
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-tower-broadcast"></i> Weather Stations (7 Total)</span>
+                                <span class="spec-val">Govt. of Canada Meteorological Stations</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-table-list"></i> Total Dataset Instances</span>
+                                <span class="spec-val">1,482 Weekly Samples (741 EB, 741 GM)</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-scale-unbalanced"></i> Target Label Imbalance</span>
+                                <span class="spec-val">1,207 Presence (81.4%) &bull; 275 Absence (18.6%)</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-list-ol"></i> Input Feature Space (12 Variables)</span>
+                                <span class="spec-val">Location, Disease Type, 6 Climate, 4 Temporal</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-gear"></i> Preprocessing &amp; Imputation</span>
+                                <span class="spec-val">Forward/backward fill, mean imputation, label encoding</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i class="fa-solid fa-code-fork"></i> Train/Test Validation Split</span>
+                                <span class="spec-val">80:20 Stratified Split + Stratified 5-Fold Cross-Validation</span>
+                            </div>
+
+                            <div style="margin-top: 6px;">
+                                <strong style="font-size: 0.82rem; color: #a7f3d0;">Covered Weather Stations:</strong>
+                                <div class="station-pill-list">
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> Charlottetown</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> Harrington</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> Summerside</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> East Point</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> Maple Plains</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> North Cape</span>
+                                    <span class="station-pill"><i class="fa-solid fa-location-dot"></i> St Peters</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. DESCRIPTIVE FINDINGS & SPORE DYNAMICS -->
+                <div class="pei-section" id="pei-findings">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-chart-pie"></i> Section 4 &bull; Descriptive Findings</span>
+                        <h2>Spore Volumetrics, Multi-Year Trends &amp; Field Hotspot Dynamics</h2>
+                        <p>Five years of aerobiological monitoring revealed stark contrasts between Gray Mold and Early Blight biology, annual trajectory peaks, and chronic field-level hotspots.</p>
+                    </div>
+
+                    <!-- Spore Volume Comparison -->
+                    <div class="spore-stat-compare">
+                        <div class="spore-counter-box gm">
+                            <span class="pei-tag" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d;">Gray Mold (Botrytis cinerea)</span>
+                            <span class="spore-big-val">~422 spores/m³</span>
+                            <span class="spore-max-val"><i class="fa-solid fa-arrow-trend-up"></i> Peak Outbreak Max: <strong>21,000 spores/m³</strong></span>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Far higher volumetric variance. Early-season fluctuation with massive explosive surge capacity under humid conditions.</p>
+                        </div>
+                        <div class="spore-counter-box eb">
+                            <span class="pei-tag" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd;">Early Blight (Alternaria solani)</span>
+                            <span class="spore-big-val">~33 spores/m³</span>
+                            <span class="spore-max-val"><i class="fa-solid fa-arrow-trend-up"></i> Peak Outbreak Max: <strong>2,099 spores/m³</strong></span>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Lower overall spore volume, but persistent distribution spread evenly across the full growing season.</p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Field Hotspot Matrix -->
+                    <div class="hotspot-interactive-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h3 style="color:#ffffff; font-size: 1.25rem;"><i class="fa-solid fa-map-pin" style="color:var(--accent-emerald);"></i> 19 PEI Farm Fields: Hotspot &amp; Intervention Matrix</h3>
+                                <p style="color:var(--text-muted); font-size: 0.9rem;">Click any field chip below to inspect longitudinal spore presence records (2019–2023) and targeted intervention advisory:</p>
+                            </div>
+                            <span class="badge-top">Targeted vs Blanket Spraying</span>
+                        </div>
+
+                        <!-- Field Chips Selector -->
+                        <div class="hotspot-chip-grid" id="hotspot-chip-container">
+                            <div class="hotspot-chip active" data-field="10">
+                                <span class="hotspot-chip-title">Field 10</span>
+                                <span class="hotspot-chip-status status-chronic">Chronic Hotspot</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="14">
+                                <span class="hotspot-chip-title">Field 14</span>
+                                <span class="hotspot-chip-status status-peak">Peaked 2020</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="5">
+                                <span class="hotspot-chip-title">Field 5</span>
+                                <span class="hotspot-chip-status status-surging">Surging Risk</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="16">
+                                <span class="hotspot-chip-title">Field 16</span>
+                                <span class="hotspot-chip-status status-surging">Surging Risk</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="3">
+                                <span class="hotspot-chip-title">Field 3</span>
+                                <span class="hotspot-chip-status status-clean">Low / Clean</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="11">
+                                <span class="hotspot-chip-title">Field 11</span>
+                                <span class="hotspot-chip-status status-clean">Minimal Spores</span>
+                            </div>
+                            <div class="hotspot-chip" data-field="17">
+                                <span class="hotspot-chip-title">Field 17</span>
+                                <span class="hotspot-chip-status status-clean">Minimal Spores</span>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Field Detail Box -->
+                        <div class="hotspot-detail-display" id="hotspot-detail-content">
+                            <strong style="color:#f87171; font-size:1rem;"><i class="fa-solid fa-triangle-exclamation"></i> Field 10 (Persistent Hotspot &bull; Top Intervention Priority)</strong>
+                            <p style="margin: 6px 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+                                Registered persistent high spore counts: <strong>82 cases in 2021</strong>, <strong>74 cases in 2022</strong>, and <strong>67 cases in 2023</strong>. Authors recommend prioritizing precision micro-interventions (e.g. bio-fungicides and canopy thinning) specifically at Field 10 rather than indiscriminate island-wide prophylactic spraying.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. RESULTS & 5-CLASSIFIER BENCHMARK -->
+                <div class="pei-section" id="pei-benchmark">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-chart-line"></i> Section 5 &bull; Empirical Benchmark</span>
+                        <h2>Systematic Comparison of Five Machine Learning Classifiers</h2>
+                        <p>Evaluated across 80:20 stratified hold-out test sets and stratified 5-fold cross-validation. Random Forest achieved top overall performance, matched by tuned XGBoost.</p>
+                    </div>
+
+                    <div class="benchmark-card">
+                        <!-- Model Selection Tabs -->
+                        <div class="benchmark-tab-nav">
+                            <button class="benchmark-tab-btn active" data-model-tab="group">
+                                <i class="fa-solid fa-layer-group"></i> Group Model (Both Diseases)
+                            </button>
+                            <button class="benchmark-tab-btn" data-model-tab="eb">
+                                <i class="fa-solid fa-leaf"></i> Early Blight Specific Model
+                            </button>
+                            <button class="benchmark-tab-btn" data-model-tab="gm">
+                                <i class="fa-solid fa-shield-virus"></i> Gray Mold Specific Model
+                            </button>
+                            <button class="benchmark-tab-btn" data-model-tab="cv">
+                                <i class="fa-solid fa-arrows-spin"></i> 5-Fold Cross-Validation Shift
+                            </button>
+                        </div>
+
+                        <!-- Table Wrapper -->
+                        <div class="benchmark-table-wrapper" id="benchmark-table-view">
+                            <table class="pei-table">
+                                <thead>
+                                    <tr>
+                                        <th>Classifier</th>
+                                        <th>Accuracy</th>
+                                        <th>Precision</th>
+                                        <th>Recall</th>
+                                        <th>F1-Score</th>
+                                        <th>Operational Evaluation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="benchmark-tbody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Statistical Paired T-Tests & Feature Importance Row -->
+                        <div class="pei-grid-2" style="margin-top: 24px;">
+                            <div class="ttest-card">
+                                <h4 style="color:#ffffff; margin-bottom: 6px;"><i class="fa-solid fa-chart-simple" style="color:var(--accent-emerald);"></i> Paired t-tests on 5-Fold CV (Statistical Significance)</h4>
+                                <div class="ttest-list">
+                                    <div class="ttest-item">
+                                        <span>Early Blight: XGBoost vs KNN</span>
+                                        <span class="pval-badge">p = 0.0003 (Sig)</span>
+                                    </div>
+                                    <div class="ttest-item">
+                                        <span>Early Blight: XGBoost vs Decision Tree</span>
+                                        <span class="pval-badge">p = 0.0194 (Sig)</span>
+                                    </div>
+                                    <div class="ttest-item">
+                                        <span>Early Blight: XGBoost vs Logistic Reg.</span>
+                                        <span class="pval-badge">p = 0.0289 (Sig)</span>
+                                    </div>
+                                    <div class="ttest-item">
+                                        <span>Gray Mold: KNN vs Random Forest</span>
+                                        <span class="pval-badge">p = 0.0020 (Sig)</span>
+                                    </div>
+                                    <div class="ttest-item">
+                                        <span>Group Model: RF vs XGBoost on CV</span>
+                                        <span class="pval-badge">p = 0.0247 (XGB Edged)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ttest-card">
+                                <h4 style="color:#ffffff; margin-bottom: 6px;"><i class="fa-solid fa-ranking-star" style="color:var(--accent-emerald);"></i> Feature Importance Hierarchy</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px; font-size: 0.88rem;">
+                                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                        <strong style="color:#6ee7b7;">Group Model:</strong> Crop Disease Type &gt; Farm Location &gt; Precipitation
+                                    </div>
+                                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                        <strong style="color:#93c5fd;">Early Blight Model:</strong> Location &gt; Precipitation &gt; Temperature <span style="color:var(--text-muted);">(Driven by rainfall &amp; heat stress)</span>
+                                    </div>
+                                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                        <strong style="color:#fcd34d;">Gray Mold Model:</strong> Relative Humidity &gt; Wind Direction &gt; Temp &gt; Dew Point <span style="color:var(--text-muted);">(Humid, poorly ventilated microclimates)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. PROTOTYPE: "PEI POTATO INSIGHT CATALYST" -->
+                <div class="pei-section" id="pei-catalyst">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> Section 6 &bull; Working Prototype</span>
+                        <h2>Live Prototype: "PEI Potato Insight Catalyst"</h2>
+                        <p>Simulating the decision-support web interface for Atlantic potato growers. Enter farm parameters below to obtain pre-symptomatic spore risk probabilities and precision intervention advisories.</p>
+                    </div>
+
+                    <div class="catalyst-wrapper">
+                        <div class="catalyst-header-badge">
+                            <i class="fa-solid fa-microchip"></i> Interactive Decision-Support Prototype Engine
+                        </div>
+                        <h3 style="font-size: 1.6rem; color: #ffffff; margin-bottom: 6px;">PEI Potato Insight Catalyst</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                            Trained on 1,482 multi-modal samples across 19 PEI fields. Translates real-time weather and biological indicators into pre-symptomatic actionable advice.
+                        </p>
+
+                        <!-- Scenario Quick Presets -->
+                        <div class="catalyst-presets-row">
+                            <span style="font-size: 0.85rem; font-weight: 700; color: #cbd5e1;"><i class="fa-solid fa-bookmark"></i> Test Real Scenarios:</span>
+                            <button class="preset-chip" id="preset-cat-gm-surge"><i class="fa-solid fa-cloud-showers-heavy"></i> Gray Mold High Humidity Surge</button>
+                            <button class="preset-chip" id="preset-cat-eb-rain"><i class="fa-solid fa-temperature-arrow-up"></i> Early Blight Heat-Rain Wave</button>
+                            <button class="preset-chip" id="preset-cat-clean"><i class="fa-solid fa-sun"></i> Dry Favorable Weather (Low Risk)</button>
+                        </div>
+
+                        <!-- Catalyst Input Form Grid -->
+                        <div class="catalyst-form-grid">
+                            <div class="cat-input-group">
+                                <label for="cat-grower-name">Grower / Farm Name</label>
+                                <input type="text" id="cat-grower-name" value="MacLean Farm - Field 10" placeholder="e.g. Harrington Field 5">
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-model-type">Classifier Model Selection</label>
+                                <select id="cat-model-type">
+                                    <option value="group">Group Model (Random Forest - 90% Acc)</option>
+                                    <option value="eb">Early Blight Model (RF/XGBoost - 82% Acc)</option>
+                                    <option value="gm">Gray Mold Model (XGBoost - 94% Acc)</option>
+                                </select>
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-station">PEI Weather Station</label>
+                                <select id="cat-station">
+                                    <option value="Charlottetown">Charlottetown Station</option>
+                                    <option value="Harrington">Harrington Station</option>
+                                    <option value="Summerside">Summerside Station</option>
+                                    <option value="East Point">East Point Station</option>
+                                    <option value="Maple Plains">Maple Plains Station</option>
+                                    <option value="North Cape">North Cape Station</option>
+                                    <option value="St Peters">St Peters Station</option>
+                                </select>
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-temp">Weekly Mean Temperature (°C) <span id="val-cat-temp">19.5°C</span></label>
+                                <input type="range" id="cat-temp" min="8" max="32" step="0.5" value="19.5">
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-precip">Weekly Cumulative Rainfall (mm) <span id="val-cat-precip">38 mm</span></label>
+                                <input type="range" id="cat-precip" min="0" max="120" step="1" value="38">
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-humidity">Relative Humidity (%) <span id="val-cat-humidity">89%</span></label>
+                                <input type="range" id="cat-humidity" min="40" max="100" step="1" value="89">
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-wind-dir">Wind Direction (Degrees) <span id="val-cat-wind-dir">210° (SSW)</span></label>
+                                <input type="range" id="cat-wind-dir" min="0" max="360" step="5" value="210">
+                            </div>
+
+                            <div class="cat-input-group">
+                                <label for="cat-wind-speed">Wind Speed (km/h) <span id="val-cat-wind-speed">16 km/h</span></label>
+                                <input type="range" id="cat-wind-speed" min="2" max="60" step="1" value="16">
+                            </div>
+
+                            <div class="cat-input-group" style="justify-content: flex-end;">
+                                <button class="btn btn-primary btn-full" id="btn-run-catalyst" style="padding: 12px;">
+                                    <i class="fa-solid fa-play"></i> Execute Risk Assessment
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Catalyst Output Result Display -->
+                        <div class="catalyst-result-panel" id="catalyst-result-panel">
+                            <div class="catalyst-risk-header">
+                                <div>
+                                    <span style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Predicted Diagnosis for <strong id="out-grower-name" style="color:#ffffff;">Grower</strong></span>
+                                    <h4 id="out-risk-title" style="font-size: 1.4rem; color: #ffffff; margin-top: 4px;">High Risk of Gray Mold</h4>
+                                </div>
+                                <div class="catalyst-risk-badge cat-risk-high" id="out-risk-badge">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> HIGH RISK
+                                </div>
+                            </div>
+
+                            <div class="catalyst-metrics-row">
+                                <div class="cat-metric-item">
+                                    <span class="cat-metric-label">Spore Presence Probability</span>
+                                    <span class="cat-metric-value" id="out-spore-prob" style="color: #6ee7b7;">92.4%</span>
+                                </div>
+                                <div class="cat-metric-item">
+                                    <span class="cat-metric-label">Spore Dispersal Risk Index</span>
+                                    <span class="cat-metric-value" id="out-dispersal-index" style="color: #fcd34d;">8.6 / 10</span>
+                                </div>
+                                <div class="cat-metric-item">
+                                    <span class="cat-metric-label">Infection Phase</span>
+                                    <span class="cat-metric-value" id="out-infection-phase" style="font-size: 1.05rem; color: #93c5fd;">Pre-Symptomatic</span>
+                                </div>
+                                <div class="cat-metric-item">
+                                    <span class="cat-metric-label">Spray Action Window</span>
+                                    <span class="cat-metric-value" id="out-spray-window" style="font-size: 1.05rem; color: #fca5a5;">Within 24–48 Hours</span>
+                                </div>
+                            </div>
+
+                            <!-- Advisory Box -->
+                            <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 18px; border-left: 4px solid var(--accent-emerald);">
+                                <h5 style="color:#ffffff; font-size: 0.95rem; margin-bottom: 6px;"><i class="fa-solid fa-stethoscope" style="color:var(--accent-emerald);"></i> Actionable Agronomic Advisory:</h5>
+                                <p id="out-advisory-text" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px; line-height: 1.6;">
+                                    Atmospheric humidity exceeds the critical Botrytis cinerea threshold with stagnant canopy airflow. Spore traps indicate impending germination.
+                                </p>
+                                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                    <span style="background: rgba(16,185,129,0.15); color:#a7f3d0; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
+                                        <strong>Active Ingredient:</strong> <span id="out-chemical-rec">Chlorothalonil or Boscalid</span>
+                                    </span>
+                                    <span style="background: rgba(245,158,11,0.15); color:#fcd34d; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
+                                        <strong>Cultural Control:</strong> Cease overhead irrigation &amp; scout downwind field edges
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. DISCUSSION, CONCLUSIONS & REPOSITORY -->
+                <div class="pei-section" id="pei-discussion">
+                    <div class="pei-section-header">
+                        <span class="pei-tag"><i class="fa-solid fa-book-open"></i> Section 7 &bull; Discussion &amp; Open Science</span>
+                        <h2>Discussion, Conclusions &amp; Public Repository</h2>
+                        <p>Demonstrating how aerobiological pre-symptomatic modeling supports agricultural sustainability, optimizes fungicide expenditures, and prevents catastrophic food loss.</p>
+                    </div>
+
+                    <div class="pei-grid-2">
+                        <div class="pei-card">
+                            <h3 style="color:#ffffff; margin-bottom: 12px;"><i class="fa-solid fa-bullseye" style="color:var(--accent-emerald);"></i> Headline Outcomes</h3>
+                            <p style="color:var(--text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom: 14px;">
+                                By fusing biological spore counts with weather variables, pre-symptomatic prediction is demonstrated to be viable. Random Forest proved the most robust off-the-shelf classifier (90% Group accuracy, 95% Recall), Decision Trees offered interpretable decision boundaries (87% accuracy), and XGBoost matched RF after tuning (90% Group, 94% on Gray Mold).
+                            </p>
+                            <p style="color:var(--text-secondary); font-size:0.92rem; line-height:1.6;">
+                                Disease-specific models captured nuanced biological triggers better than group architectures—with Gray Mold benefiting most significantly.
+                            </p>
+                        </div>
+
+                        <div class="pei-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h3 style="color:#ffffff; margin-bottom: 12px;"><i class="fa-brands fa-github" style="color:var(--accent-emerald);"></i> Code &amp; Dataset Transparency</h3>
+                                <p style="color:var(--text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom: 16px;">
+                                    The 5-year dataset and reproduction scripts are published openly on GitHub to support global crop pathology research:
+                                </p>
+                                <a href="https://github.com/avneetK9/Potato_EB-GM" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fa-brands fa-github"></i> github.com/avneetK9/Potato_EB-GM
+                                </a>
+                            </div>
+                            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.8rem; color: var(--text-muted);">
+                                <strong>Funding &amp; Institutional Support:</strong> NSERC Alliance (SARI Program) in collaboration with Airspore Inc. and the Prince Edward Island Potato Board.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. POINTS WORTH TREATING WITH CAUTION -->
+                <div class="pei-section" id="pei-caution">
+                    <div class="pei-section-header">
+                        <span class="pei-tag" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d;"><i class="fa-solid fa-triangle-exclamation"></i> Section 8 &bull; Critical Evaluation</span>
+                        <h2>Points Worth Treating with Caution (Peer-Review Critical Analysis)</h2>
+                        <p>Essential scientific caveats, statistical nuances, and methodology checks identified from thorough peer analysis of the publication:</p>
+                    </div>
+
+                    <div class="caution-card-grid">
+                        <!-- Caution 1 -->
+                        <div class="caution-card">
+                            <div class="caution-header">
+                                <i class="fa-solid fa-hashtag"></i>
+                                <h4>Inconsistent Reporting Figures</h4>
+                            </div>
+                            <p>The manuscript conclusion claims Random Forest attained <strong>92% accuracy</strong> for Early Blight, whereas Table 6 and the empirical results text state <strong>82%</strong>. Additionally, the text notes 1,482 samples split as 741 per disease, while class-balance counts show 275 absence and 1,207 presence.</p>
+                        </div>
+
+                        <!-- Caution 2 -->
+                        <div class="caution-card">
+                            <div class="caution-header">
+                                <i class="fa-solid fa-arrows-spin"></i>
+                                <h4>Possible Label Circularity</h4>
+                            </div>
+                            <p>The binary target label is derived directly from spore counts (&gt;0 = presence, 0 = absence). Thus, "predicting disease" is mechanically predicting airborne spore presence from meteorological variables. Spore presence and actual disease occurrence are used interchangeably without proving physical infection.</p>
+                        </div>
+
+                        <!-- Caution 3 -->
+                        <div class="caution-card">
+                            <div class="caution-header">
+                                <i class="fa-solid fa-microscope"></i>
+                                <h4>"Pre-Symptomatic" Claim Nuances</h4>
+                            </div>
+                            <p>The study does not validate model predictions against confirmed physical leaf lesions or final harvest yield losses. Physical airborne spore presence indicates inoculum pressure in the air, but does not guarantee successful leaf cuticular penetration or lesion establishment.</p>
+                        </div>
+
+                        <!-- Caution 4 -->
+                        <div class="caution-card">
+                            <div class="caution-header">
+                                <i class="fa-solid fa-scale-unbalanced-flip"></i>
+                                <h4>The 81% Class Imbalance Baseline</h4>
+                            </div>
+                            <p>With 1,207 positive instances out of 1,482 (81.4%), a naive dummy classifier predicting "present" 100% of the time achieves ~81.4% accuracy. This explains why Logistic Regression scored 83% accuracy while collapsing on absence cases (0 True Negatives and 11 False Positives for Gray Mold).</p>
+                        </div>
+
+                        <!-- Caution 5 -->
+                        <div class="caution-card">
+                            <div class="caution-header">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <h4>Validation Leakage Risks</h4>
+                            </div>
+                            <p>Random stratified splits of weekly samples across the same 19 fields over 5 years introduce risk of temporal and spatial autocorrelation leakage. A rigorous <em>leave-one-year-out</em> or <em>leave-one-field-out</em> validation protocol would provide a stricter test of true generalization.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRANSITION PORTAL BANNER TO UPLOAD PAGE -->
+                <div class="portal-transition-banner" id="portal-transition-block">
+                    <span class="transition-badge">
+                        <i class="fa-solid fa-arrow-right"></i> Next Diagnostic Step
+                    </span>
+                    <h2>Bridge into the CropGuard AI Diagnostic Scanner</h2>
+                    <p>
+                        While the PEI study establishes the gold standard for pre-symptomatic airborne spore modeling in potatoes, <strong>CropGuard AI</strong> expands this methodology into a dual-engine architecture—coupling optical CNN lesion segmentation with tabular microclimate modeling across Indian agricultural belts for Tomato, Corn, Rice, Potato, and Apple.
+                    </p>
+                    <div class="transition-cta-group">
+                        <button class="btn btn-accent" onclick="showPage('upload')">
+                            <i class="fa-solid fa-camera"></i> Launch Upload Diagnostic Scanner &amp; Indian Map &rarr;
+                        </button>
+                        <button class="btn btn-secondary" onclick="showPage('home')">
+                            <i class="fa-solid fa-house"></i> Return to Main Home Portal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div> <!-- End #page-research -->
+
+        <!-- ========================================================
+             PAGE 2: UPLOAD & DIAGNOSTIC SCANNER WORKSPACE
+             ======================================================== -->
+        <div id="page-upload" class="page-view">
+            <div class="section-container page-top-bar">
+                <div class="page-breadcrumb">
+                    <a href="javascript:void(0)" onclick="showPage('home')"><i class="fa-solid fa-house"></i> Home</a>
+                    <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+                    <span>Hybrid Optical &amp; Pre-Symptomatic AI Diagnostic Scanner &amp; Outbreak Map</span>
+                </div>
+                <button class="btn-back-home" onclick="showPage('home')">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Main Home
+                </button>
+            </div>
+
+            <!-- Upload Page Header & System Accuracy Banner -->
+            <div class="section-container" style="margin-bottom: 24px;">
+                <div class="stats-banner" style="margin-top: 0;">
                     <div class="stat-item">
                         <span class="stat-number">94.2%</span>
                         <span class="stat-label">RF/XGBoost Tabular Accuracy</span>
@@ -128,7 +856,6 @@
                     </div>
                 </div>
             </div>
-        </section>
 
         <!-- 2. AI HYBRID DIAGNOSTIC SCANNER SECTION -->
         <section id="scanner-section" class="section-container scanner-layout">
@@ -718,6 +1445,7 @@
                 <div id="global-radar-map" class="interactive-map radar-map"></div>
             </div>
         </section>
+        </div> <!-- End #page-upload -->
     </main>
 
     <!-- DISEASE DETAIL MODAL -->
@@ -734,20 +1462,20 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <div class="nav-logo">
+                <div class="nav-logo" onclick="showPage('home')" style="cursor: pointer;">
                     <div class="logo-icon-bg"><i class="fa-solid fa-leaf"></i></div>
                     <span class="brand-title">CropGuard<span class="accent-text">AI</span></span>
                 </div>
                 <p>Empowering agricultural resilience through hybrid optical-climate modeling, SHAP explainability, and Indian crop surveillance.</p>
             </div>
             <div class="footer-links">
-                <h4>Quick Navigation</h4>
+                <h4>Navigation Portals</h4>
                 <ul>
-                    <li><a href="#welcome">Home / Welcome</a></li>
-                    <li><a href="#scanner-section">Hybrid AI Scanner</a></li>
-                    <li><a href="#dss-section">Decision Support (DSS)</a></li>
-                    <li><a href="#shap-section">Explainable AI (SHAP)</a></li>
-                    <li><a href="#global-map-section">India Outbreak Map</a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('home')">Home Portal</a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('upload')">Upload &amp; Diagnostic Scanner</a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('research')">PEI Spore Research Study</a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('upload'); setTimeout(() => { const el = document.getElementById('dss-section'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200);">Decision Support (DSS)</a></li>
+                    <li><a href="javascript:void(0)" onclick="showPage('upload'); setTimeout(() => { const el = document.getElementById('global-map-section'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 200);">India Outbreak Radar</a></li>
                 </ul>
             </div>
             <div class="footer-info">

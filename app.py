@@ -76,4 +76,4 @@ def get_bundled_html():
     return html_content
 
 bundled_html = get_bundled_html()
-components.html(bundled_html, height=1400, scrolling=True)
+components.html(bundled_html, height=2400, scrolling=True)
