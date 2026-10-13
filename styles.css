@@ -55,6 +55,30 @@ body {
     min-height: 100vh;
 }
 
+/* Modern Dark-Themed Scrollbars (Eliminates default white browser scrollbars) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #07130e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.35);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.65);
+}
+
+* {
+    scrollbar-color: rgba(16, 185, 129, 0.35) #07130e;
+    scrollbar-width: thin;
+}
+
 /* Typography & Links */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
@@ -3209,6 +3233,691 @@ a {
     color: #ffffff;
     transform: translateX(-3px);
 }
+
+/* ========================================================
+   UPLOAD & SCAN PAGE: RESEARCH INTELLIGENCE VAULT (EXPRESSIVE BOXED UI)
+   ======================================================== */
+.research-vault-box {
+    background: linear-gradient(145deg, rgba(10, 26, 19, 0.95) 0%, rgba(6, 17, 13, 0.98) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 20px;
+    padding: 0;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.12);
+    margin-bottom: 32px;
+    overflow: hidden;
+    position: relative;
+}
+
+.research-vault-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981 0%, #34d399 35%, #06b6d4 70%, #3b82f6 100%);
+}
+
+/* Vault Terminal Top Bar */
+.vault-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.vault-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    animation: pulseGlow 1.8s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.vault-status-text {
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #6ee7b7;
+}
+
+.vault-quick-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.meta-chip {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #a7f3d0;
+}
+
+.btn-vault-link {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-vault-link:hover {
+    background: var(--accent-emerald);
+    color: #042f22;
+    border-color: var(--accent-emerald);
+}
+
+/* Vault Body */
+.vault-body {
+    padding: 24px;
+}
+
+.vault-title-row {
+    margin-bottom: 20px;
+}
+
+.vault-title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.vault-lead-badge {
+    font-size: 0.75rem;
+    background: rgba(6, 182, 212, 0.15);
+    color: #67e8f9;
+    border: 1px solid rgba(6, 182, 212, 0.35);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+}
+
+.vault-subtitle {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Vault Tab Switcher (Expressive Buttons) */
+.vault-nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding-bottom: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.vault-nav-tabs::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+
+.vault-tab-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-family: var(--font-body);
+}
+
+.vault-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.vault-tab-btn.active {
+    background: rgba(16, 185, 129, 0.22);
+    border-color: var(--accent-emerald);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+}
+
+.vault-tab-btn i {
+    font-size: 0.95rem;
+}
+
+/* Vault Content Panels */
+.vault-panel {
+    display: none;
+    animation: panelPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vault-panel.active {
+    display: block;
+}
+
+@keyframes panelPop {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================
+   PANEL 1: HEAD-TO-HEAD VERSUS BOX (VISUAL & EXPRESSIVE)
+   ======================================================== */
+.vs-arena-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 16px;
+}
+
+.vs-box {
+    border-radius: 14px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.vs-box.conventional {
+    background: linear-gradient(145deg, rgba(45, 18, 18, 0.8) 0%, rgba(26, 10, 10, 0.85) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.vs-box.cropguard {
+    background: linear-gradient(145deg, rgba(12, 38, 28, 0.85) 0%, rgba(8, 24, 18, 0.9) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.vs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.vs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.vs-box.conventional .vs-badge {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.vs-box.cropguard .vs-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.vs-timeline-tag {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.vs-big-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.vs-box.conventional .vs-big-title { color: #fca5a5; }
+.vs-box.cropguard .vs-big-title { color: #6ee7b7; }
+
+.vs-big-metric {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.1;
+}
+
+.vs-box.conventional .vs-big-metric { color: #ef4444; }
+.vs-box.cropguard .vs-big-metric { color: #34d399; }
+
+/* Visual Progress / Damage Meter */
+.vs-meter-box {
+    margin-bottom: 16px;
+}
+
+.vs-meter-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.74rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.vs-meter-track {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.vs-meter-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.vs-box.conventional .vs-meter-fill {
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    width: 82%;
+}
+
+.vs-box.cropguard .vs-meter-fill {
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+    width: 95%;
+}
+
+/* Action Chips inside VS Box */
+.vs-feature-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vs-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+}
+
+.vs-chip i {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.vs-box.conventional .vs-chip i { color: #f87171; }
+.vs-box.cropguard .vs-chip i { color: #34d399; }
+
+.vs-chip strong {
+    color: #ffffff;
+    margin-right: 4px;
+}
+
+/* ========================================================
+   PANEL 2: 4-CARD BENTO METRICS GRID
+   ======================================================== */
+.bento-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.bento-metric-tile {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 20px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-metric-tile:hover {
+    transform: translateY(-4px);
+    border-color: rgba(16, 185, 129, 0.4);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.bento-icon-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(16, 185, 129, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    color: var(--accent-emerald);
+    margin-bottom: 14px;
+}
+
+.bento-number {
+    font-family: var(--font-heading);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.bento-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    margin-bottom: 6px;
+}
+
+.bento-subtext {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* ========================================================
+   PANEL 3: MODEL BENCHMARK ARENA TILES
+   ======================================================== */
+.benchmark-arena-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.arena-card {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+}
+
+.arena-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.arena-card.arena-top {
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.arena-card.arena-hybrid {
+    background: linear-gradient(145deg, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 1px solid rgba(6, 182, 212, 0.45);
+}
+
+.arena-top-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.arena-top .arena-top-badge { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
+.arena-hybrid .arena-top-badge { background: rgba(6, 182, 212, 0.25); color: #67e8f9; }
+.arena-card:not(.arena-top):not(.arena-hybrid) .arena-top-badge { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+
+.arena-model-name {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.arena-stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.arena-stat-col {
+    text-align: center;
+}
+
+.arena-stat-col span {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.arena-stat-col strong {
+    font-size: 0.95rem;
+    font-family: var(--font-heading);
+    color: #ffffff;
+}
+
+.arena-stat-col strong.green { color: #6ee7b7; }
+.arena-stat-col strong.cyan { color: #67e8f9; }
+
+.arena-verdict {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+    margin-top: 6px;
+}
+
+/* ========================================================
+   PANEL 4: INDIAN FIELD CORRIDORS (4-BOX GRID)
+   ======================================================== */
+.corridors-bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.corridor-tile {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    transition: var(--transition);
+}
+
+.corridor-tile:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+    transform: translateY(-3px);
+}
+
+.corridor-loc-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.corridor-loc-badge.hp { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.corridor-loc-badge.ka { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+.corridor-loc-badge.wb { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+.corridor-loc-badge.pb { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+
+.corridor-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.corridor-pathogen {
+    font-size: 0.72rem;
+    color: var(--accent-emerald);
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.corridor-climate-pill {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.72rem;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.corridor-outcome {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+}
+
+/* ========================================================
+   PANEL 5: SCIENTIFIC RIGOR & CITATIONS BOXES
+   ======================================================== */
+.rigor-box-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.rigor-tile {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.rigor-tile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.rigor-tile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.rigor-tile-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.rigor-tile-points {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.rigor-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.rigor-point i {
+    color: var(--accent-emerald);
+    margin-top: 2px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1000px) {
+    .vs-arena-grid {
+        grid-template-columns: 1fr;
+    }
+    .bento-metrics-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .benchmark-arena-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .corridors-bento-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .rigor-box-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .bento-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    .benchmark-arena-grid {
+        grid-template-columns: 1fr;
+    }
+    .corridors-bento-grid {
+        grid-template-columns: 1fr;
+    }
+    .vault-body {
+        padding: 16px;
+    }
+    .vault-top-bar {
+        padding: 12px 16px;
+    }
+}
+
+
 
 
 
